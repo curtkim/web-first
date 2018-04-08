@@ -1,0 +1,10 @@
+{
+  "namespace":"com.treselle.db.model",
+  "type":"record",
+  "name" : "OrderDetail",
+  "fields" : [
+    {"name":"quantity","type": "int"},
+    {"name":"total","type": "float"},
+    {"name":"product_detail", "type": com.treselle.db.model.Product}
+  ]
+}

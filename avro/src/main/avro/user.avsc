@@ -1,0 +1,23 @@
+[
+  {
+    "namespace": "example.avro",
+    "type": "record",
+    "name": "Location",
+    "fields": [
+      {"name": "name", "type": "string"},
+      {"name": "lat", "type": ["float", "null"]},
+      {"name": "lng", "type": ["float", "null"]}
+    ]
+  },
+  {
+    "namespace": "example.avro",
+    "type": "record",
+    "name": "User",
+    "fields": [
+      {"name": "name", "type": "string"},
+      {"name": "favorite_number", "type": ["int", "null"]},
+      {"name": "favorite_color", "type": ["string", "null"]},
+      {"name": "location", "type": ["null", "Location"], "default": null}
+    ]
+  }
+]

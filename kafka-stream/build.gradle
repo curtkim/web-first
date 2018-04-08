@@ -1,0 +1,37 @@
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
+}
+
+dependencies {
+    compile 'org.apache.kafka:kafka-streams:1.1.0'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.3.0'
+
+    testCompile "org.apache.kafka:kafka-clients:1.1.0:test"
+    testCompile "org.apache.curator:curator-test:2.9.0"
+
+    testCompile "org.apache.avro:avro:1.8.2"
+    testCompile "org.apache.kafka:kafka_2.11:1.1.0"
+    testCompile "org.apache.kafka:kafka_2.11:1.1.0:test"
+    testCompile "io.confluent:kafka-schema-registry:4.0.0"
+    testCompile 'io.confluent:kafka-schema-registry:4.0.0:tests'
+
+    testCompile 'io.confluent:kafka-streams-avro-serde:4.0.0'
+    testCompile 'io.confluent:kafka-avro-serializer:4.0.0'
+
+    /*
+
+    */
+
+    testCompile 'org.apache.kafka:kafka-streams-test-utils:1.1.0'
+}

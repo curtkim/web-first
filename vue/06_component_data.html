@@ -1,0 +1,25 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="example-2">
+    <simple-counter></simple-counter>
+    <simple-counter></simple-counter>
+    <simple-counter></simple-counter>
+  </div>
+  <script type="text/javascript">
+    Vue.component('simple-counter', {
+      template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+      data: function(){
+        return {
+          counter: 0
+        }
+      }
+    })
+    var app = new Vue({
+      el: '#example-2'
+    })
+  </script>
+</body>
+</html>

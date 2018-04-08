@@ -1,0 +1,34 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+  </div>
+
+  <script type="text/javascript">
+    var NotFound = { template: '<p>Page not found</p>' }
+    var Home = { template: '<p>home page</p>' }
+    var About = { template: '<p>about page</p>' }
+    var routes = {
+      '': Home,
+      'about': About
+    }
+
+    new Vue({
+      el: '#app',
+      data: {
+        currentRoute: window.location.hash.substring(1)
+      },
+      computed: {
+        ViewComponent () {
+          return routes[this.currentRoute] || NotFound
+        }
+      },
+      render (createElement) {
+        return createElement(this.ViewComponent)
+      }
+    })
+  </script>
+</body>
+</html>

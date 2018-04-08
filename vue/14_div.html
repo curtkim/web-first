@@ -1,0 +1,69 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <style>
+    body {margin: 0; padding: 0}
+    #header {
+      background-color: silver;
+      height: 50px;
+    }
+    #body {}
+    #left {
+      float: left;
+      height: 100%;
+      background-color: yellow;
+    }
+    #right {
+      float: left;
+      height: 100%;
+      background-color: blue;
+    }
+    #footer {
+      background-color: green;
+      height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <div id="header" >header</div>
+    <div id="body" v-bind:style="{height: bodyHeight}">
+      <div id="left" v-bind:style="{width: leftWidth}">left</div>
+      <div id="right" v-bind:style="{width: rightWidth}">right</div>
+    </div>
+    <div id="footer">footer</div>
+  </div>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        resizeCount:0,
+        leftShow: true,
+        exampleContent: 'This is Text'
+      },
+      computed:{
+        bodyHeight:function() {
+          this.resizeCount
+          return window.innerHeight - (50+50);
+        },
+        leftWidth: function(){
+          return this.leftShow ? 300 : 0;
+        },
+        rightWidth: function(){
+          this.resizeCount
+          return window.innerWidth - this.leftWidth;
+        }
+      }
+    })
+
+    window.onresize = function(){
+      app.resizeCount++
+      //app.windowHeight = window.innerHeight
+      //app.windowWidth = window.innerWidth
+    }
+
+  </script>
+</body>
+</html>

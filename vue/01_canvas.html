@@ -1,0 +1,31 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+
+  <div id="app">
+      <canvas width="300" height="150" style="border:1px solid #BBB;" v-insert-message="exampleContent"></canvas>
+      <input type="text" v-model="exampleContent" />
+      <span>{{ exampleContent }}</span>
+  </div>
+
+  <script type="text/javascript">
+    new Vue({
+      el: '#app',
+      data: {
+        exampleContent: 'This is Text'
+      },
+      directives:{
+        insertMessage: function(canvasElement, binding){
+          var ctx = canvasElement.getContext('2d')
+          ctx.clearRect(0,0,300,150)
+          ctx.fillStyle = 'black'
+          ctx.font = '20px Georgia'
+          ctx.fillText(binding.value, 10, 50)
+        }
+      }
+    })
+  </script>
+</body>
+</html>

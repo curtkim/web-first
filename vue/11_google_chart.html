@@ -1,0 +1,70 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+  <div id="app">
+    <chart title='My Daily Activities' :rows='rows'></chart>
+    <button v-on:click='rows = generateRows()'>new data</button>
+  </div>
+
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']})
+    google.charts.setOnLoadCallback(init)
+
+    Vue.component('chart', {
+      template: '<div id="piechart" style="width: 900px; height: 500px;"></div>',
+      props: ['title', 'rows'],
+      mounted: function(){
+        this.draw()
+      },
+      methods: {
+        draw: function(){
+          console.log('draw')
+          var arr = [['Task', 'Hours per Day']].concat(this.rows)
+          var data = google.visualization.arrayToDataTable(arr)
+
+          var options = {
+            title: this.title
+          }
+
+          var chart = new google.visualization.PieChart(this.$el) // this.$el사용
+          chart.draw(data, options)
+        }
+      },
+      watch: {
+        rows: function(newData, oldData){
+          //console.log(newData, oldData)
+          this.draw()
+        }
+      }
+    })
+
+    function rand(){
+      return parseInt(Math.random()*10)
+    }
+    function generateRows(){
+      return [
+        ['Work',     rand()],
+        ['Eat',      rand()],
+        ['Commute',  rand()],
+        ['Watch TV', rand()],
+        ['Sleep',    rand()]
+      ]
+    }
+
+    function init(){
+      var app = new Vue({
+        el: '#app',
+        data: {
+          rows: this.generateRows()
+        },
+        methods:{
+          generateRows:generateRows
+        }
+      })
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol-debug.css" type="text/css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol-debug.js"></script>
+  <script src="ol-daum.js"></script>
+</head>
+<body>
+  <div id="app">
+    <mymap level='5' :center='center'></mymap>
+  </div>
+
+  <script type="text/javascript">
+    Vue.component('mymap', {
+      template: "<div style='width:500px; height:500px;'></div>",
+      props: ['level','center'],
+      mounted: function(){
+        var daumImgLayer = new ol.layer.Tile({
+          source: new ol.source.DaumImg()
+        })
+
+        var map = new ol.Map({
+          target: this.$el, // this.$el을 사용한다.
+          layers: [
+            daumImgLayer
+          ],
+          view: new ol.View({
+            center: this.center,
+            zoom: 14 - this.level,
+            maxZoom: 14,
+            maxResolution: 2048
+          }),
+          controls: [
+            new ol.control.Zoom(),
+            new ol.control.MousePosition()
+          ]
+        })
+      }
+    })
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        center: [195063,442898]
+      }
+    })
+  </script>
+</body>
+</html>

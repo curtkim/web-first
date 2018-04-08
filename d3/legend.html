@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>D3 Tree Example</title>
+  <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+  <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3-legend/1.10.0/d3-legend.js" charset="utf-8"></script>
+  <script src="legend.js"></script>
+
+  <style>
+  svg {
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    display: block;
+    background: white;
+    border: 1px solid $grey;
+  }
+
+  pre[class*="language-"]{
+    margin-top: 0px;
+    margin-bottom: 30px;
+    border: 1px solid #E4E4E4;
+  }
+
+  :not(pre) > code[class*="language-"], pre[class*="language-"] {
+    background: #FFFFFF;
+  }
+
+  .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted {
+    color: #323232;
+  }
+
+  .token.function {
+    color: #989898;
+  }
+
+  .token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted {
+    color: #00993C;
+  }
+
+  h4 {
+    display: inline-block;
+  }
+
+  strong {
+    color: #272727;
+  }
+
+  text {
+    font: 12px sans-serif;
+  }
+
+  hr {
+    border-top: 1px solid #999;
+  }
+
+  table tbody tr:not(:last-child) td{
+    border-bottom: 2px solid #E7E7E7;
+  }
+
+  table tbody td:not(:last-child), table thead th:not(:last-child) {
+    border-right: 2px solid #e7e7e7
+  }
+
+  table td:not(:first-child){
+    width: 60px;
+  }
+
+  table td.included{
+    background-color: rgb(102, 178, 155);
+  }
+
+  @media only screen and (max-width: 480px){
+    table {
+      font-size: 11px;
+    }
+  }
+
+  #contents ul li {
+    font-size: 16px;
+  }
+
+  .legendSize rect, .legendSize circle{
+    fill: rgb(46, 73, 123);
+  }
+
+
+  .legendSizeHorz circle{
+    stroke: rgb(71, 187, 94);
+    fill: none;
+  }
+
+   .legendSizeLine line {
+    stroke: rgb(46, 73, 123);
+   }
+
+   .legendSymbol path {
+    fill: rgb(64, 108, 189);
+   }
+
+
+  .q0-9 { fill:rgb(247,251,255); }
+  .q1-9 { fill:rgb(222,235,247); }
+  .q2-9 { fill:rgb(198,219,239); }
+  .q3-9 { fill:rgb(158,202,225); }
+  .q4-9 { fill:rgb(107,174,214); }
+  .q5-9 { fill:rgb(66,146,198); }
+  .q6-9 { fill:rgb(33,113,181); }
+  .q7-9 { fill:rgb(8,81,156); }
+  .q8-9 { fill:rgb(8,48,107); }
+  </style>
+</head>
+<body>
+  <svg height=200 width=160  id="svg-color-quant"></svg>
+  <svg height=200 width=360  id="svg-color-linear-10"></svg>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>D3 Tree Example</title>
+  <style>
+
+  body {
+    font-size: 10px;
+  }
+
+  .background {
+    fill: #eee;
+  }
+
+  line {
+    stroke: #fff;
+  }
+
+  text.active {
+    fill: red;
+  }
+
+  </style>
+  <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+  <script src="//d3js.org/d3.v3.min.js"></script>
+  <script src="matrix.js"></script>
+</head>
+<body>
+Order: <select id="order">
+  <option value="name">by Name</option>
+  <option value="count">by Frequency</option>
+  <option value="group">by Cluster</option>
+</select>
+</body>
+</html>

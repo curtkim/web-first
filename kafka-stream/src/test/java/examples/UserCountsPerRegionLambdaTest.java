@@ -1,3 +1,5 @@
+package examples;
+
 import io.confluent.examples.streams.IntegrationTestUtils;
 import io.confluent.examples.streams.kafka.EmbeddedSingleNodeKafkaCluster;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

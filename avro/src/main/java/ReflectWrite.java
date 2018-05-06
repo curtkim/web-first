@@ -41,6 +41,9 @@ class User {
   @AvroName("favorite_color")
   String favoriteColor;
 
+  User(){
+  }
+
   public User(String name, Integer favoriteNumber) {
     this.name = name;
     this.favoriteNumber = favoriteNumber;
@@ -52,5 +55,14 @@ class User {
 
   public void setFavoriteColor(String favoriteColor) {
     this.favoriteColor = favoriteColor;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "name='" + name + '\'' +
+        ", favoriteNumber=" + favoriteNumber +
+        ", favoriteColor='" + favoriteColor + '\'' +
+        '}';
   }
 }

@@ -1,4 +1,4 @@
-/*
+package examples;/*
  * Copyright Confluent Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,7 @@ import java.util.Random;
  * Once packaged you can then run:
  * <pre>
  * {@code
- * $ java -cp target/kafka-streams-examples-4.0.0-SNAPSHOT-standalone.jar io.confluent.examples.streams.PageViewRegionExampleDriver
+ * $ java -cp target/kafka-streams-examples-4.0.0-SNAPSHOT-standalone.jar io.confluent.examples.streams.examples.PageViewRegionExampleDriver
  * }
  * </pre>
  * You should terminate with {@code Ctrl-C}.

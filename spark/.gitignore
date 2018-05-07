@@ -1,0 +1,6 @@
+build
+.gradle
+*.iml
+.idea
+*parquet/
+src/main/java/HdfsCopy.java

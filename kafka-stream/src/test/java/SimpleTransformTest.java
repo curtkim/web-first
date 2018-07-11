@@ -21,10 +21,7 @@ public class SimpleTransformTest {
   private static final String inputTopic = "simple-input";
   private static final String outputTopic = "simple-output";
 
-  private TopologyTestDriver testDriver;
-  private StringDeserializer stringDeserializer = new StringDeserializer();
-  private LongDeserializer longDeserializer = new LongDeserializer();
-  private ConsumerRecordFactory<String, String> recordFactory = new ConsumerRecordFactory<>(new StringSerializer(), new StringSerializer());
+  private DriverTestWrapper wrapper;
 
   @Before
   public void setup(){
@@ -44,22 +41,23 @@ public class SimpleTransformTest {
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
 
-    testDriver = new TopologyTestDriver(builder.build(), config);
+    wrapper = new DriverTestWrapper(inputTopic, outputTopic,
+        builder.build(), config,
+        new StringSerializer(), new StringSerializer(),
+        new StringDeserializer(), new StringDeserializer());
   }
 
   @After
   public void tearDown() {
-    testDriver.close();
+    wrapper.tearDown();
   }
 
   @Test
   public void test1() {
-    testDriver.pipeInput(recordFactory.create(inputTopic, "curt", new JSONObject().put("success", true).put("origin", "부천역").toString() ));
-    testDriver.pipeInput(recordFactory.create(inputTopic, "mary", new JSONObject().put("success", false).put("origin", "강남역").toString() ));
-
-    OutputVerifier.compareKeyValue(testDriver.readOutput(outputTopic, stringDeserializer, stringDeserializer),
-        "curt", new JSONObject().put("success", true).put("origin", "부천역").toString());
-    Assert.assertNull(testDriver.readOutput(outputTopic, stringDeserializer, longDeserializer));
+    wrapper.input("curt", new JSONObject().put("success", true).put("origin", "부천역").toString());
+    wrapper.input("mary", new JSONObject().put("success", false).put("origin", "강남역").toString());
+    wrapper.readOutputAndAssert("curt", new JSONObject().put("success", true).put("origin", "부천역").toString());
+    wrapper.readOutputAndAssertNull();
   }
 }
 

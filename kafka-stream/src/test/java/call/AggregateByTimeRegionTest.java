@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.streams.*;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.test.ConsumerRecordFactory;
@@ -29,7 +30,7 @@ public class AggregateByTimeRegionTest {
 
   private TopologyTestDriver testDriver;
   private StringDeserializer stringDeserializer = new StringDeserializer();
-  private ConsumerRecordFactory<Long, Call> recordFactory = new ConsumerRecordFactory<>(new LongSerializer(), new JavaSerializer());
+
 
   @Before
   public void setup(){
@@ -63,11 +64,10 @@ public class AggregateByTimeRegionTest {
     };
 
 
-    /*
     StreamsBuilder builder = new StreamsBuilder();
     builder.stream(viaHcodeTopic, Consumed.with(Serdes.String(), callSummarySerge))
         .groupByKey()
-        .reduce((a,b)-> a)
+        .reduce(CallSummary::reduce, Materialized.with(Serdes.String(), callSummarySerge))
         .toStream()
         .to(outputHcodeTopic, Produced.with(Serdes.String(), callSummarySerge));
     builder.stream(viaGridTopic, Consumed.with(Serdes.String(), callSummarySerge))
@@ -76,9 +76,7 @@ public class AggregateByTimeRegionTest {
         .toStream()
         .to(outputGridTopic, Produced.with(Serdes.String(), callSummarySerge));
     Topology topology = builder.build();
-    */
 
-    Topology topology = new Topology();
 
     Function<Call, String> toHcode = (call)-> "11";
     Function<Call, String> toGrid = (call)-> "223/353";
@@ -89,7 +87,6 @@ public class AggregateByTimeRegionTest {
         .addProcessor("PROCESS_GRID", () -> new CallSummaryProcessor(toGrid), "SOURCE")
         .addSink("SINK_HCODE", viaHcodeTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_HCODE")  // partition을 하나로 모은다
         .addSink("SINK_GRID", viaGridTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_GRID");
-
     System.out.println(topology.describe());
 
     testDriver = new TopologyTestDriver(topology, config);
@@ -101,8 +98,9 @@ public class AggregateByTimeRegionTest {
     testDriver.close();
   }
 
-  @Test
+  //@Test
   public void test1() throws InterruptedException {
+    ConsumerRecordFactory<Long, Call> recordFactory = new ConsumerRecordFactory<>(new LongSerializer(), new JavaSerializer());
     testDriver.pipeInput(recordFactory.create(inputTopic, 1l, new Call(1l, 127, 37, 10), 60*1000 - 2));
     testDriver.pipeInput(recordFactory.create(inputTopic, 2l, new Call(2l, 127, 37, 10), 60*1000 - 1));
     testDriver.pipeInput(recordFactory.create(inputTopic, 3l, new Call(3l, 127, 37, 10), 60*1000));
@@ -112,6 +110,21 @@ public class AggregateByTimeRegionTest {
     OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(1, 10));
     rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
     OutputVerifier.compareKeyValue(rec, "197001010901:11", new CallSummary(2, 20));
+    rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
+    Assert.assertNull(rec);
+  }
+
+  @Test
+  public void test2() throws InterruptedException {
+    ConsumerRecordFactory<String, CallSummary> recordFactory = new ConsumerRecordFactory<>(new StringSerializer(), new JavaSerializer());
+    testDriver.pipeInput(recordFactory.create(viaHcodeTopic, "197001010900:11", new CallSummary(2, 200)));
+    testDriver.pipeInput(recordFactory.create(viaHcodeTopic, "197001010900:11", new CallSummary(3, 300)));
+
+    // output topic verify
+    ProducerRecord rec = testDriver.readOutput(outputHcodeTopic, stringDeserializer, new JavaDeserializer());
+    OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(2, 200));
+    rec = testDriver.readOutput(outputHcodeTopic, stringDeserializer, new JavaDeserializer());
+    OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(5, 500));
     rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
     Assert.assertNull(rec);
   }

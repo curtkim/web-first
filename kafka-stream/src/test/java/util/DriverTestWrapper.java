@@ -1,3 +1,5 @@
+package util;
+
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.TopologyTestDriver;
@@ -40,13 +42,13 @@ public class DriverTestWrapper {
   }
 
 
-  void input(Object key, Object value){
+  public void input(Object key, Object value){
     testDriver.pipeInput(recordFactory.create(inputTopic, key, value));
   }
-  void readOutputAndAssert(Object key, Object value){
+  public void readOutputAndAssert(Object key, Object value){
     OutputVerifier.compareKeyValue(testDriver.readOutput(outputTopic, keyDeserializer, valueDeserializer), key, value);
   }
-  void readOutputAndAssertNull(){
+  public void readOutputAndAssertNull(){
     Assert.assertNull(testDriver.readOutput(outputTopic, keyDeserializer, valueDeserializer));
   }
 

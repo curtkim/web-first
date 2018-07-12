@@ -64,7 +64,8 @@ public class FavouriteColorTest {
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
 
-    testDriver = new TopologyTestDriver(builder.build(), config);
+    Topology topology = builder.build();
+    testDriver = new TopologyTestDriver(topology, config);
   }
 
   @After

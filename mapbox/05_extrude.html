@@ -1,0 +1,89 @@
+<html>
+<head>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />  
+  <style type="text/css">
+    body { margin: 0; padding: 0; }
+  </style>
+</head>
+
+<body>
+  <div id='map' style='width: 100%; height: 100%;'></div>
+  <script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtdGVyaSIsImEiOiJjaXA1N3Z3c3QwMDR3dHhtNXA5aThhZ3FsIn0.Ju8h4nDvTi1cQU_-Sdj0-w';
+  var map = new mapboxgl.Map({
+      style: 'mapbox://styles/mapbox/streets-v9',
+      center: [127, 37.5],
+      zoom: 10,
+      pitch: 60,
+      container: 'map',
+  });
+
+
+var features = []
+var DELTA = 0.05
+var WIDTH = DELTA - 0.01
+var HEIGHT = DELTA - 0.01
+
+for (var x = 126.5; x < 127.5; x += DELTA){
+  for(var y = 37; y < 38; y+= DELTA ){
+    features.push({
+      'type': 'Feature',
+      "properties": {
+        "height": Math.random()*10000,
+        "color": "blue"
+      },
+      'geometry': {
+        'type': 'Polygon',
+        'coordinates': [[
+          [x, y],
+          [x+WIDTH, y],
+          [x+WIDTH, y+HEIGHT],
+          [x, y+HEIGHT],
+          [x, y]
+        ]]
+      }
+    })    
+  }
+}
+
+
+map.on("load", function() {
+  map.addLayer({
+    'id': 'maine',
+    'type': 'fill-extrusion',
+    'source': {
+      'type': 'geojson',
+      'data': {
+        "type": "FeatureCollection",
+        "features": features
+      }
+    },
+    'layout': {},
+    'paint': {
+      // See the Mapbox Style Specification for details on data expressions.
+      // https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions
+
+      // Get the fill-extrusion-color from the source 'color' property.
+      'fill-extrusion-color': ['get', 'color'],
+
+      // Get fill-extrusion-height from the source 'height' property.
+      'fill-extrusion-height': ['get', 'height'],
+
+      // Get fill-extrusion-base from the source 'base_height' property.
+      'fill-extrusion-base': 0,
+
+      // Make extrusions slightly opaque for see through indoor walls.
+      'fill-extrusion-opacity': 0.75
+    }
+  });
+
+  map.setLight({
+    intensity: 1
+  })  
+});
+
+
+</script>  
+</body>
+</html>

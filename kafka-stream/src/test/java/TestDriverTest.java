@@ -101,8 +101,8 @@ public class TestDriverTest {
     testDriver.pipeInput(recordFactory.create("input-topic", "a", 1L, 9999L));
     Assert.assertNull(testDriver.readOutput("result-topic", stringDeserializer, longDeserializer));
 
-    testDriver.pipeInput(recordFactory.create("input-topic", "a", 1L, 10000L));
-    OutputVerifier.compareKeyValue(testDriver.readOutput("result-topic", stringDeserializer, longDeserializer), "a", 21L);
+    testDriver.pipeInput(recordFactory.create("input-topic", "a", 42L, 10000L));
+    OutputVerifier.compareKeyValue(testDriver.readOutput("result-topic", stringDeserializer, longDeserializer), "a", 42L);
     Assert.assertNull(testDriver.readOutput("result-topic", stringDeserializer, longDeserializer));
   }
 
@@ -123,7 +123,7 @@ class CustomMaxAggregator implements Processor<String, Long> {
   @Override
   public void init(ProcessorContext context) {
     this.context = context;
-    context.schedule(60000, PunctuationType.WALL_CLOCK_TIME, (timestamp)->flushStore());
+    //context.schedule(60000, PunctuationType.WALL_CLOCK_TIME, (timestamp)->flushStore());
     context.schedule(10000, PunctuationType.STREAM_TIME, (timeStamp)-> flushStore());
     store = (KeyValueStore<String, Long>) context.getStateStore("aggStore");
   }
@@ -141,6 +141,7 @@ class CustomMaxAggregator implements Processor<String, Long> {
     KeyValueIterator<String, Long> it = store.all();
     while (it.hasNext()) {
       KeyValue<String, Long> next = it.next();
+      System.out.println(next.key + " " + next.value);
       context.forward(next.key, next.value);
     }
   }

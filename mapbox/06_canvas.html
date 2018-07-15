@@ -22,7 +22,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtdGVyaSIsImEiOiJjaXA1N3Z3c3QwMDR3dHhtNXA5a
 var map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/outdoors-v9",
-  center: [-121.403732, 40.492392],
+  center: [-121.4, 40.4],
   zoom: 10
 });
 
@@ -57,6 +57,8 @@ map.on("load", function() {
     "type": "raster",
     "paint": {"raster-opacity": 0.5}
   });
+
+  console.log(map.project([-121.4, 40.4])) // {x:500, y:250}
 });
 </script>
 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Add multiple geometries from one GeoJSON source</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:relative; top:0; bottom:0; width:1000px; height: 500px}
+        #el_canvas { position:relative; width:1000px; height: 500px; border: 1px soldi silver}
+    </style>
+</head>
+<body>
+<xmp>
+  http://bl.ocks.org/Sumbera/c6fed35c377a46ff74c3 처럼 하고 싶었는데
+  언제 canvas를 업데이트 해야할지 잘 모르겠음
+</xmp>
+<div id="map"></div>
+<canvas id="el_canvas"></canvas>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtdGVyaSIsImEiOiJjaXA1N3Z3c3QwMDR3dHhtNXA5aThhZ3FsIn0.Ju8h4nDvTi1cQU_-Sdj0-w';
+var map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/mapbox/outdoors-v9",
+  center: [-121.4, 40.4],
+  zoom: 10
+});
+
+map.on("load", function() {
+  var canvas = document.getElementById('el_canvas')
+  var canvasWidth = canvas.getAttribute('width')
+  var canvasHeight= canvas.getAttribute('height')
+  // Draw
+  var ctx= canvas.getContext("2d")
+  //ctx.scale(1/10, -1/10)
+  //ctx.translate(-300,-1100)
+  ctx.lineWidth="60"
+  ctx.strokeStyle="red"
+  ctx.moveTo(0,0)
+  ctx.lineTo(500,500)
+  ctx.stroke()
+
+  map.addSource("canvas_source", {
+    type: 'canvas',
+    canvas: 'el_canvas',
+    coordinates: [
+      [-122, 41],
+      [-120, 41],
+      [-120, 40],
+      [-122, 40]
+    ]
+  });
+
+  map.addLayer({
+    "id": "canvas_layer",
+    "source": "canvas_source",
+    "type": "raster",
+    "paint": {"raster-opacity": 0.5}
+  });
+
+  console.log(map.project([-121.4, 40.4])) // {x:500, y:250}
+});
+</script>
+
+</body>
+</html>

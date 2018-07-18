@@ -22,6 +22,31 @@ const map = new Map({
   viewState: INITIAL_VIEW_STATE
 });
 
+function newLayer(extruded){
+  console.log(extruded)
+  return new PolygonLayer({
+    id: 'polygon-layer',
+    data: DATA,
+    extruded,
+    pickable: true,
+    stroked: true,
+    filled: true,
+    wireframe: true,
+    lineWidthMinPixels: 1,
+    getPolygon: d => d.contour,
+    getElevation: d => d.population / d.area / 10,
+    getFillColor: d => [d.population / d.area / 60, 140, 0],
+    getLineColor: [80, 80, 80],
+    getLineWidth: 1,
+
+    // TODO setTooltip에서 에러가 발생한다.
+    //onHover: ({object}) => setTooltip(`${object.zipcode}\nPopulation: ${object.population}`)
+  })
+
+}
+
+const layer = newLayer(true)
+
 export const deck = new Deck({
   canvas: 'deck-canvas',
   width: '100%',
@@ -32,26 +57,14 @@ export const deck = new Deck({
     console.log(viewState)
     map.setProps({viewState});
   },
-  layers: [
-    new PolygonLayer({
-      id: 'polygon-layer',
-      data: DATA,
-      extruded: true,
-      pickable: true,
-      stroked: true,
-      filled: true,
-      wireframe: true,
-      lineWidthMinPixels: 1,
-      getPolygon: d => d.contour,
-      getElevation: d => d.population / d.area / 10,
-      getFillColor: d => [d.population / d.area / 60, 140, 0],
-      getLineColor: [80, 80, 80],
-      getLineWidth: 1,
-
-      // TODO setTooltip에서 에러가 발생한다.
-      //onHover: ({object}) => setTooltip(`${object.zipcode}\nPopulation: ${object.population}`)
-    })
-  ]
+  layers: [ layer ]
 });
 
 
+document.getElementById('chkExtrude').onchange = function(){
+  deck.setProps({
+    layers: [
+      newLayer(document.getElementById('chkExtrude').checked)
+    ]
+  })
+}

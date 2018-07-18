@@ -30,6 +30,7 @@ export const deck = new Deck({
   initialViewState: INITIAL_VIEW_STATE,
   controller: true,
   onViewStateChange: ({viewState}) => {
+    console.log(viewState)
     map.setProps({viewState});
   },
   layers: [

@@ -1,0 +1,57 @@
+import {Deck} from '@deck.gl/core';
+import {PolygonLayer} from '@deck.gl/layers';
+import Map from './mapbox';
+
+const DATA =
+  'sf-zipcodes.json'; //eslint-disable-line
+// Set your mapbox token here
+const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
+
+const INITIAL_VIEW_STATE = {
+  latitude: 37.78346622,
+  longitude: -122.42177834,
+  zoom: 11.5,
+  bearing: 0,
+  pitch: 60
+};
+
+const map = new Map({
+  mapboxApiAccessToken: MAPBOX_TOKEN,
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v9',
+  viewState: INITIAL_VIEW_STATE
+});
+
+export const deck = new Deck({
+  canvas: 'deck-canvas',
+  width: '100%',
+  height: '100%',
+  initialViewState: INITIAL_VIEW_STATE,
+  controller: true,
+  onViewStateChange: ({viewState}) => {
+    console.log(viewState)
+    map.setProps({viewState});
+  },
+  layers: [
+    new PolygonLayer({
+      id: 'polygon-layer',
+      data: DATA,
+      extruded: true,
+      pickable: true,
+      stroked: true,
+      filled: true,
+      wireframe: true,
+      lineWidthMinPixels: 1,
+      getPolygon: d => d.contour,
+      getElevation: d => d.population / d.area / 10,
+      getFillColor: d => [d.population / d.area / 60, 140, 0],
+      getLineColor: [80, 80, 80],
+      getLineWidth: 1,
+
+      // TODO setTooltip에서 에러가 발생한다.
+      //onHover: ({object}) => setTooltip(`${object.zipcode}\nPopulation: ${object.population}`)
+    })
+  ]
+});
+
+

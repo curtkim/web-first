@@ -9,7 +9,7 @@ const CONFIG = {
   mode: 'development',
 
   entry: {
-    app: resolve('./app2.js')
+    app: resolve('./app_polygon.js')
   },
 
   resolve: {

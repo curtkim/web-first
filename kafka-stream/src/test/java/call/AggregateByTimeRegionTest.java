@@ -42,7 +42,6 @@ public class AggregateByTimeRegionTest {
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
 
-
     Serde<CallSummary> callSummarySerge = new Serde<CallSummary>(){
       @Override
       public void configure(Map<String, ?> configs, boolean isKey) {
@@ -98,8 +97,8 @@ public class AggregateByTimeRegionTest {
     testDriver.close();
   }
 
-  //@Test
-  public void test1() throws InterruptedException {
+  @Test
+  public void test1() {
     ConsumerRecordFactory<Long, Call> recordFactory = new ConsumerRecordFactory<>(new LongSerializer(), new JavaSerializer());
     testDriver.pipeInput(recordFactory.create(inputTopic, 1l, new Call(1l, 127, 37, 10), 60*1000 - 2));
     testDriver.pipeInput(recordFactory.create(inputTopic, 2l, new Call(2l, 127, 37, 10), 60*1000 - 1));
@@ -115,7 +114,7 @@ public class AggregateByTimeRegionTest {
   }
 
   @Test
-  public void test2() throws InterruptedException {
+  public void test2() {
     ConsumerRecordFactory<String, CallSummary> recordFactory = new ConsumerRecordFactory<>(new StringSerializer(), new JavaSerializer());
     testDriver.pipeInput(recordFactory.create(viaHcodeTopic, "197001010900:11", new CallSummary(2, 200)));
     testDriver.pipeInput(recordFactory.create(viaHcodeTopic, "197001010900:11", new CallSummary(3, 300)));
@@ -125,7 +124,7 @@ public class AggregateByTimeRegionTest {
     OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(2, 200));
     rec = testDriver.readOutput(outputHcodeTopic, stringDeserializer, new JavaDeserializer());
     OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(5, 500));
-    rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
+    rec = testDriver.readOutput(outputHcodeTopic, stringDeserializer, new JavaDeserializer());
     Assert.assertNull(rec);
   }
 

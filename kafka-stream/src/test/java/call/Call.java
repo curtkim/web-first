@@ -43,4 +43,14 @@ public class Call implements Serializable{
     result = 31 * result + (int) (distance ^ (distance >>> 32));
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "Call{" +
+        "id=" + id +
+        ", lng=" + lng +
+        ", lat=" + lat +
+        ", distance=" + distance +
+        '}';
+  }
 }

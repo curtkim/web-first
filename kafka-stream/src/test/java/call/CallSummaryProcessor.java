@@ -17,7 +17,7 @@ public class CallSummaryProcessor implements Processor<Long, Call> {
   private Map<String, CallSummary> map = new HashMap<>();
   private Function<Call, String> toRegion;
 
-  private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+  private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
   public CallSummaryProcessor(Function<Call, String> toRegion){
     this.toRegion = toRegion;
@@ -32,7 +32,7 @@ public class CallSummaryProcessor implements Processor<Long, Call> {
         String time = dateFormat.format(new Date(timestamp));
 
         for(String region : map.keySet()) {
-          System.out.println(time + ":" + region);
+          System.out.println("forward " + time + ":" + region);
           context.forward(time + ":" + region, map.get(region));
         }
         context.commit();

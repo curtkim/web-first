@@ -15,6 +15,7 @@ public class CallSummary implements Serializable{
   }
 
   public CallSummary add(Call call){
+    System.out.println("add: " + this + " + " + call);
     count++;
     distance += call.distance;
     return this;
@@ -29,6 +30,7 @@ public class CallSummary implements Serializable{
   }
 
   public static CallSummary reduce(CallSummary a, CallSummary b){
+    System.out.println("reduce: " + a + " " + b);
     CallSummary result = new CallSummary();
     result.count = a.count + b.count;
     result.distance = a.distance + b.distance;

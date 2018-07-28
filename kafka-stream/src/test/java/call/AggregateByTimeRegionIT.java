@@ -72,30 +72,22 @@ public class AggregateByTimeRegionIT {
   private static final String viaGridTopic = "call_grid_via";
 
   private StringDeserializer stringDeserializer = new StringDeserializer();
-  private KafkaStreams kafkaStreams;
+  private KafkaStreams kafkaStreams1;
+  private KafkaStreams kafkaStreams2;
 
-  @Before
-  public void setup(){
-    Properties config = new Properties();
-    config.put(StreamsConfig.APPLICATION_ID_CONFIG, "user-regions-lambda-integration-test");
-    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
-    config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-    config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+
+  private void setup2(){
+    Properties config2 = new Properties();
+    config2.put(StreamsConfig.APPLICATION_ID_CONFIG, "application1");
+    config2.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
+    config2.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+    config2.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
     // The commit interval for flushing records to state stores and downstream must be lower than
     // this integration test's timeout (30 secs) to ensure we observe the expected processing results.
-    config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
-    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    config2.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
+    config2.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     // Use a temporary directory for storing state, which will be automatically removed after the test.
     //streamsConfiguration.put(StreamsConfig.STATE_DIR_CONFIG, TestUtils.tempDirectory().getAbsolutePath());
-
-
-//    Properties config = new Properties();
-//    config.put(StreamsConfig.APPLICATION_ID_CONFIG, "aggregate_region_test");
-//    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-//    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-//    config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-//    config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-//    config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
 
     Serde<CallSummary> callSummarySerge = new Serde<CallSummary>(){
       @Override
@@ -124,34 +116,55 @@ public class AggregateByTimeRegionIT {
         .reduce(CallSummary::reduce, Materialized.with(Serdes.String(), callSummarySerge))
         .toStream()
         .to(outputHcodeTopic, Produced.with(Serdes.String(), callSummarySerge));
-//    builder.stream(viaGridTopic, Consumed.with(Serdes.String(), callSummarySerge))
-//        .groupByKey()
-//        .reduce((a,b)-> a)
-//        .toStream()
-//        .to(outputGridTopic, Produced.with(Serdes.String(), callSummarySerge));
-    Topology topology = builder.build();
+    Topology topology2 = builder.build();
+    System.out.println(topology2.describe());
 
+    kafkaStreams2 = new KafkaStreams(topology2, config2);
+    kafkaStreams2.cleanUp();
+    kafkaStreams2.start();
+  }
 
+  void setup1(){
+    Properties config1 = new Properties();
+    config1.put(StreamsConfig.APPLICATION_ID_CONFIG, "stream2");
+    config1.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
+    config1.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+    config1.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+    // The commit interval for flushing records to state stores and downstream must be lower than
+    // this integration test's timeout (30 secs) to ensure we observe the expected processing results.
+    config1.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
+    config1.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    // Use a temporary directory for storing state, which will be automatically removed after the test.
+    //streamsConfiguration.put(StreamsConfig.STATE_DIR_CONFIG, TestUtils.tempDirectory().getAbsolutePath());
+
+    Topology topology1 = new Topology();
     Function<Call, String> toHcode = (call)-> "11";
     Function<Call, String> toGrid = (call)-> "223/353";
     StreamPartitioner partitioner = (key, value, partition)-> 0;
 
-    topology.addSource("SOURCE", new LongDeserializer(), new JavaDeserializer(), inputTopic)
+    topology1.addSource("SOURCE", new LongDeserializer(), new JavaDeserializer(), inputTopic)
         .addProcessor("PROCESS_HCODE", () -> new CallSummaryProcessor(toHcode), "SOURCE")
         //.addProcessor("PROCESS_GRID", () -> new CallSummaryProcessor(toGrid), "SOURCE")
         .addSink("SINK_HCODE", viaHcodeTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_HCODE");  // partition을 하나로 모은다
-        //.addSink("SINK_GRID", viaGridTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_GRID");
-    System.out.println(topology.describe());
+    //.addSink("SINK_GRID", viaGridTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_GRID");
+    System.out.println(topology1.describe());
 
-    kafkaStreams = new KafkaStreams(builder.build(), config);
-    kafkaStreams.cleanUp();
-    kafkaStreams.start();
+    kafkaStreams1 = new KafkaStreams(topology1, config1);
+    kafkaStreams1.cleanUp();
+    kafkaStreams1.start();
   }
 
 
+  @Before
+  public void setup(){
+    setup1();
+    setup2();
+  }
+
   @After
   public void tearDown() {
-    kafkaStreams.close();
+    kafkaStreams1.close();
+    kafkaStreams2.close();
   }
 
 
@@ -189,7 +202,7 @@ public class AggregateByTimeRegionIT {
     //
     Properties consumerConfig = new Properties();
     consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
-    consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "user-regions-lambda-integration-test-standard-consumer");
+    consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer");
     consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JavaDeserializer.class);
@@ -198,21 +211,21 @@ public class AggregateByTimeRegionIT {
     consumer.subscribe(Collections.singletonList(viaHcodeTopic));
     ConsumerRecords<String, CallSummary> records = consumer.poll(3000);
 
-    System.out.println("---");
+    System.out.println("---1");
     System.out.println(records.count());
     for(ConsumerRecord<String, CallSummary> rec : records)
       System.out.println(rec.key() + " @ " + rec.value());
 
     records = consumer.poll(3000);
 
-    System.out.println("---");
+    System.out.println("---2");
     System.out.println(records.count());
     for(ConsumerRecord<String, CallSummary> rec : records)
       System.out.println(rec.key() + " @ " + rec.value());
     consumer.close();
 
 
-    System.out.println("===");
+    System.out.println("===3");
     consumer = new KafkaConsumer<>(consumerConfig);
     consumer.subscribe(Collections.singletonList(outputHcodeTopic));
     records = consumer.poll(3000);
@@ -221,7 +234,7 @@ public class AggregateByTimeRegionIT {
     for(ConsumerRecord<String, CallSummary> rec : records)
       System.out.println(rec.key() + " @ " + rec.value());
 
-    System.out.println("===");
+    System.out.println("===4");
     records = consumer.poll(3000);
 
     System.out.println(records.count());

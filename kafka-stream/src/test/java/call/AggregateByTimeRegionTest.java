@@ -1,5 +1,6 @@
 package call;
 
+import java.util.Calendar;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.*;
@@ -69,11 +70,11 @@ public class AggregateByTimeRegionTest {
         .reduce(CallSummary::reduce, Materialized.with(Serdes.String(), callSummarySerge))
         .toStream()
         .to(outputHcodeTopic, Produced.with(Serdes.String(), callSummarySerge));
-    builder.stream(viaGridTopic, Consumed.with(Serdes.String(), callSummarySerge))
-        .groupByKey()
-        .reduce((a,b)-> a)
-        .toStream()
-        .to(outputGridTopic, Produced.with(Serdes.String(), callSummarySerge));
+//    builder.stream(viaGridTopic, Consumed.with(Serdes.String(), callSummarySerge))
+//        .groupByKey()
+//        .reduce((a,b)-> a)
+//        .toStream()
+//        .to(outputGridTopic, Produced.with(Serdes.String(), callSummarySerge));
     Topology topology = builder.build();
 
 
@@ -83,9 +84,9 @@ public class AggregateByTimeRegionTest {
 
     topology.addSource("SOURCE", new LongDeserializer(), new JavaDeserializer(), inputTopic)
         .addProcessor("PROCESS_HCODE", () -> new CallSummaryProcessor(toHcode), "SOURCE")
-        .addProcessor("PROCESS_GRID", () -> new CallSummaryProcessor(toGrid), "SOURCE")
-        .addSink("SINK_HCODE", viaHcodeTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_HCODE")  // partition을 하나로 모은다
-        .addSink("SINK_GRID", viaGridTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_GRID");
+        //.addProcessor("PROCESS_GRID", () -> new CallSummaryProcessor(toGrid), "SOURCE")
+        .addSink("SINK_HCODE", viaHcodeTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_HCODE");  // partition을 하나로 모은다
+        //.addSink("SINK_GRID", viaGridTopic, new StringSerializer(), new JavaSerializer(), partitioner, "PROCESS_GRID");
     System.out.println(topology.describe());
 
     testDriver = new TopologyTestDriver(topology, config);
@@ -99,16 +100,28 @@ public class AggregateByTimeRegionTest {
 
   @Test
   public void test1() {
+    Calendar cal = Calendar.getInstance();
+    cal.set(2018, 7-1, 28, 12, 0, 0);
+    long base = cal.getTime().getTime();
+    String strBase = CallSummaryProcessor.dateFormat.format(cal.getTime());
+
     ConsumerRecordFactory<Long, Call> recordFactory = new ConsumerRecordFactory<>(new LongSerializer(), new JavaSerializer());
-    testDriver.pipeInput(recordFactory.create(inputTopic, 1l, new Call(1l, 127, 37, 10), 60*1000 - 2));
-    testDriver.pipeInput(recordFactory.create(inputTopic, 2l, new Call(2l, 127, 37, 10), 60*1000 - 1));
-    testDriver.pipeInput(recordFactory.create(inputTopic, 3l, new Call(3l, 127, 37, 10), 60*1000));
+    ConsumerRecordFactory<String, CallSummary> recordFactory2 = new ConsumerRecordFactory<>(new StringSerializer(), new JavaSerializer());
+
+    testDriver.pipeInput(recordFactory2.create(viaHcodeTopic, "0", new CallSummary(), base));
+
+    testDriver.pipeInput(recordFactory.create(inputTopic, 1l, new Call(1l, 127, 37, 10), base));
+    testDriver.pipeInput(recordFactory.create(inputTopic, 2l, new Call(2l, 127, 37, 10), base+60*1000 - 2));
+    testDriver.pipeInput(recordFactory.create(inputTopic, 3l, new Call(3l, 127, 37, 10), base+60*1000 - 1));
+    testDriver.pipeInput(recordFactory.create(inputTopic, 4l, new Call(4l, 127, 37, 10), base+60*1000));
+    testDriver.pipeInput(recordFactory.create(inputTopic, 5l, new Call(5l, 127, 37, 10), base+60*1000+1));
+    testDriver.pipeInput(recordFactory.create(inputTopic, 6l, new Call(6l, 127, 37, 10), base+60*1000*2));
 
     // output topic verify
     ProducerRecord rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
-    OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(1, 10));
+    OutputVerifier.compareKeyValue(rec, strBase+":11", new CallSummary(1, 10));
     rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
-    OutputVerifier.compareKeyValue(rec, "197001010901:11", new CallSummary(2, 20));
+    OutputVerifier.compareKeyValue(rec, strBase+":11", new CallSummary(2, 20));
     rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
     Assert.assertNull(rec);
   }

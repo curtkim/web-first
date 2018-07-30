@@ -29,6 +29,9 @@ public class CallSummary implements Serializable{
         '}';
   }
 
+  public static CallSummary init(Call call){
+    return new CallSummary().add(call);
+  }
   public static CallSummary reduce(CallSummary a, CallSummary b){
     System.out.println("reduce: " + a + " " + b);
     CallSummary result = new CallSummary();

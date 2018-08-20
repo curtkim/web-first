@@ -121,6 +121,18 @@ public class IntegrationTestUtils {
     producer.close();
   }
 
+  public static <K, V> void produceRecordsSynchronously(
+          Collection<ProducerRecord<K, V>> records, Properties producerConfig)
+          throws ExecutionException, InterruptedException {
+    Producer<K, V> producer = new KafkaProducer<>(producerConfig);
+    for (ProducerRecord<K, V> record : records) {
+      Future<RecordMetadata> f = producer.send(record);
+      f.get();
+    }
+    producer.flush();
+    producer.close();
+  }
+
   public static <V> void produceValuesSynchronously(
       String topic, Collection<V> records, Properties producerConfig)
       throws ExecutionException, InterruptedException {

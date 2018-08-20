@@ -1,26 +1,17 @@
 package call;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import io.confluent.examples.streams.IntegrationTestUtils;
 import io.confluent.examples.streams.kafka.EmbeddedSingleNodeKafkaCluster;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+
+import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Function;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
@@ -35,14 +26,9 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.TopologyTestDriver;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.StreamPartitioner;
-import org.apache.kafka.streams.test.ConsumerRecordFactory;
-import org.apache.kafka.streams.test.OutputVerifier;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -50,7 +36,6 @@ import org.junit.Test;
 import util.JavaDeserializer;
 import util.JavaSerializer;
 
-// dsl로 만든 sub-topology가 있으면 동작을 하지 않는다. TestDriver여서 그런가? 아니면 실환경에서도 그럴것인가?
 public class AggregateByTimeRegionIT {
 
   @ClassRule
@@ -58,7 +43,7 @@ public class AggregateByTimeRegionIT {
 
   @BeforeClass
   public static void startKafkaCluster() throws Exception {
-    CLUSTER.createTopic(inputTopic, 2, 1);
+    CLUSTER.createTopic(inputTopic);
     CLUSTER.createTopic(outputHcodeTopic);
     CLUSTER.createTopic(outputGridTopic);
     CLUSTER.createTopic(viaHcodeTopic);
@@ -154,6 +139,17 @@ public class AggregateByTimeRegionIT {
     kafkaStreams1.start();
   }
 
+  /*
+  void setup1(){
+    Function<Call, String> toHcode = (call)-> "11";
+
+    StreamsBuilder builder = new StreamsBuilder();
+    KStream<Long, Call> stream = builder.stream(inputTopic);
+    TimeWindowedKStream a = stream
+            .groupBy((k, v)-> toHcode.apply(v))
+            .windowedBy(TimeWindows.of(TimeUnit.MINUTES.toMillis(1)))
+  }
+  */
 
   @Before
   public void setup(){
@@ -180,21 +176,11 @@ public class AggregateByTimeRegionIT {
     userRegionsProducerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
     userRegionsProducerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JavaSerializer.class);
 
-    Producer<Long, Call> producer = new KafkaProducer<>(userRegionsProducerConfig);
-    Future<RecordMetadata> f = producer.send(new ProducerRecord<>(inputTopic, 0, 0l, 1l, new Call(1l, 127, 37, 10)));
-    f.get();
-    f = producer.send(new ProducerRecord<>(inputTopic, 0, 60*1000-1l, 2l, new Call(2l, 127, 37, 20)));
-    f.get();
-    f = producer.send(new ProducerRecord<>(inputTopic, 0, 60*1000+0l, 3l, new Call(3l, 127, 37, 30)));
-    f.get();
-    f = producer.send(new ProducerRecord<>(inputTopic, 0, 60*1000+1l, 4l, new Call(4l, 127, 37, 40)));
-    f.get();
-    f = producer.send(new ProducerRecord<>(inputTopic, 0, 60*1000*2+1l, 4l, new Call(5l, 127, 37, 50)));
-    f.get();
+    List<ProducerRecord<Long, Call>> producerRecords = new ArrayList<>();
+    for(long i = 0;i < 121; i++)
+      producerRecords.add( new ProducerRecord<>(inputTopic, 0, i*1000, i, new Call(i, 127, 37, i)));
 
-    producer.flush();
-    producer.close();
-
+    IntegrationTestUtils.produceRecordsSynchronously(producerRecords, userRegionsProducerConfig);
     Thread.sleep(10*1000);
 
     //
@@ -207,62 +193,13 @@ public class AggregateByTimeRegionIT {
     consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JavaDeserializer.class);
 
-    KafkaConsumer<String, CallSummary> consumer = new KafkaConsumer<>(consumerConfig);
-    consumer.subscribe(Collections.singletonList(viaHcodeTopic));
-    ConsumerRecords<String, CallSummary> records = consumer.poll(3000);
-
-    System.out.println("---1");
-    System.out.println(records.count());
-    for(ConsumerRecord<String, CallSummary> rec : records)
-      System.out.println(rec.key() + " @ " + rec.value());
-
-    records = consumer.poll(3000);
-
-    System.out.println("---2");
-    System.out.println(records.count());
-    for(ConsumerRecord<String, CallSummary> rec : records)
-      System.out.println(rec.key() + " @ " + rec.value());
-    consumer.close();
-
-
-    System.out.println("===3");
-    consumer = new KafkaConsumer<>(consumerConfig);
-    consumer.subscribe(Collections.singletonList(outputHcodeTopic));
-    records = consumer.poll(3000);
-
-    System.out.println(records.count());
-    for(ConsumerRecord<String, CallSummary> rec : records)
-      System.out.println(rec.key() + " @ " + rec.value());
-
-    System.out.println("===4");
-    records = consumer.poll(3000);
-
-    System.out.println(records.count());
-    for(ConsumerRecord<String, CallSummary> rec : records)
-      System.out.println(rec.key() + " @ " + rec.value());
-    consumer.close();
-
-    /*
-    List<KeyValue<String, Long>> actualClicksPerRegion = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig,
-        outputTopic, expectedUsersPerRegion.size());
-    streams.close();
-    assertThat(actualClicksPerRegion).containsExactlyElementsOf(expectedUsersPerRegion);
-
-
-
-    ConsumerRecordFactory<Long, Call> recordFactory = new ConsumerRecordFactory<>(new LongSerializer(), new JavaSerializer());
-    testDriver.pipeInput(recordFactory.create(inputTopic, 1l, new Call(1l, 127, 37, 10), 60*1000 - 2));
-    testDriver.pipeInput(recordFactory.create(inputTopic, 2l, new Call(2l, 127, 37, 10), 60*1000 - 1));
-    testDriver.pipeInput(recordFactory.create(inputTopic, 3l, new Call(3l, 127, 37, 10), 60*1000));
-
-    // output topic verify
-    ProducerRecord rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
-    OutputVerifier.compareKeyValue(rec, "197001010900:11", new CallSummary(1, 10));
-    rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
-    OutputVerifier.compareKeyValue(rec, "197001010901:11", new CallSummary(2, 20));
-    rec = testDriver.readOutput(viaHcodeTopic, stringDeserializer, new JavaDeserializer());
-    Assert.assertNull(rec);
-    */
+    List<KeyValue<String, CallSummary>> results = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, viaHcodeTopic, 3);
+    assertEquals( "197001010900:11", results.get(0).key);
+    assertEquals( 1l, results.get(0).value.count);
+    assertEquals( "197001010901:11", results.get(1).key);
+    assertEquals( 59l, results.get(1).value.count);
+    assertEquals( "197001010902:11", results.get(2).key);
+    assertEquals( 60l, results.get(2).value.count);
   }
 
   /*

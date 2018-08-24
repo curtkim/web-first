@@ -1,8 +1,5 @@
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -14,15 +11,12 @@ import org.slf4j.LoggerFactory;
 
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
-import reactor.kafka.receiver.ReceiverOptions;
-import reactor.kafka.receiver.ReceiverRecord;
-import reactor.kafka.receiver.KafkaReceiver;
-import reactor.kafka.receiver.ReceiverOffset;
+import reactor.kafka.receiver.*;
 
 
-public class SampleConsumer {
+public class KafkaSampleConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(SampleConsumer.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(KafkaSampleConsumer.class.getName());
 
   private static final String BOOTSTRAP_SERVERS = "localhost:9092";
   private static final String TOPIC = "demo-topic";
@@ -30,7 +24,7 @@ public class SampleConsumer {
   private final ReceiverOptions<Integer, String> receiverOptions;
   private final SimpleDateFormat dateFormat;
 
-  public SampleConsumer(String bootstrapServers) {
+  public KafkaSampleConsumer(String bootstrapServers) {
 
     Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -45,7 +39,7 @@ public class SampleConsumer {
 
   public Disposable consumeMessages(String topic, CountDownLatch latch) {
     ReceiverOptions<Integer, String> options = receiverOptions.subscription(Collections.singleton(topic))
-        .addAssignListener(partitions -> log.debug("onPartitionsAssigned {}", partitions))
+        .addAssignListener((Collection<ReceiverPartition> partitions) -> log.debug("onPartitionsAssigned {}", partitions))
         .addRevokeListener(partitions -> log.debug("onPartitionsRevoked {}", partitions));
     Flux<ReceiverRecord<Integer, String>> kafkaFlux = KafkaReceiver.create(options).receive();
     return kafkaFlux.subscribe(record -> {
@@ -64,7 +58,7 @@ public class SampleConsumer {
   public static void main(String[] args) throws Exception {
     int count = 20;
     CountDownLatch latch = new CountDownLatch(count);
-    SampleConsumer consumer = new SampleConsumer(BOOTSTRAP_SERVERS);
+    KafkaSampleConsumer consumer = new KafkaSampleConsumer(BOOTSTRAP_SERVERS);
     Disposable disposable = consumer.consumeMessages(TOPIC, latch);
     latch.await(10, TimeUnit.SECONDS);
     disposable.dispose();

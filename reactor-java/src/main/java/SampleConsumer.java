@@ -19,18 +19,7 @@ import reactor.kafka.receiver.ReceiverRecord;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOffset;
 
-/**
- * Sample consumer application using Reactive API for Kafka.
- * To run sample consumer
- * <ol>
- *   <li> Start Zookeeper and Kafka server
- *   <li> Update {@link #BOOTSTRAP_SERVERS} and {@link #TOPIC} if required
- *   <li> Create Kafka topic {@link #TOPIC}
- *   <li> Send some messages to the topic, e.g. by running {@link SampleProducer}
- *   <li> Run {@link SampleConsumer} as Java application with all dependent jars in the CLASSPATH (eg. from IDE).
- *   <li> Shutdown Kafka server and Zookeeper when no longer required
- * </ol>
- */
+
 public class SampleConsumer {
 
   private static final Logger log = LoggerFactory.getLogger(SampleConsumer.class.getName());
@@ -55,7 +44,6 @@ public class SampleConsumer {
   }
 
   public Disposable consumeMessages(String topic, CountDownLatch latch) {
-
     ReceiverOptions<Integer, String> options = receiverOptions.subscription(Collections.singleton(topic))
         .addAssignListener(partitions -> log.debug("onPartitionsAssigned {}", partitions))
         .addRevokeListener(partitions -> log.debug("onPartitionsRevoked {}", partitions));

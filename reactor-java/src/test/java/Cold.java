@@ -35,8 +35,7 @@ public class Cold {
 
     Flux<Integer> flux = Flux.just(1, 2, 3, 4);
 
-    flux.log()
-        .subscribe(elements::add);
+    flux.log().subscribe(elements::add);
     flux.subscribe(elements2::add);
 
     assertThat(elements).containsExactly(1, 2, 3, 4);

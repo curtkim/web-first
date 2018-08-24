@@ -1,0 +1,2 @@
+- http://www.baeldung.com/spring-reactor
+- https://dzone.com/articles/spring-boot-server-sent-events-tutorial

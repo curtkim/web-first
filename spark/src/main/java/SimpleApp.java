@@ -12,18 +12,8 @@ public class SimpleApp {
         .getOrCreate();
     Dataset<String> logData = spark.read().textFile(logFile).cache();
 
-    long numAs = logData.filter(new FilterFunction<String>() {
-      @Override
-      public boolean call(String s) throws Exception {
-        return s.contains("a");
-      }
-    }).count();
-    long numBs = logData.filter(new FilterFunction<String>() {
-      @Override
-      public boolean call(String s) throws Exception {
-        return s.contains("b");
-      }
-    }).count();
+    long numAs = logData.filter( s-> s.contains("a")).count();
+    long numBs = logData.filter( s-> s.contains("b")).count();
 
     System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);
 

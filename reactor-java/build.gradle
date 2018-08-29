@@ -1,7 +1,19 @@
-plugins {
-    id 'groovy'
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 version '1.0-SNAPSHOT'
 
@@ -12,12 +24,14 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile 'io.projectreactor:reactor-core:3.1.8.RELEASE'
     compile 'io.projectreactor.addons:reactor-extra:3.1.6.RELEASE'
-
+    compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile('org.springframework.boot:spring-boot-starter-data-redis-reactive:2.0.4.RELEASE')
 
     compile group: 'io.projectreactor.kafka', name: 'reactor-kafka', version: '1.0.0.RELEASE'
+
+    compile 'org.projectlombok:lombok:1.18.2'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.10.0'

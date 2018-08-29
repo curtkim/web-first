@@ -1,16 +1,12 @@
-import org.assertj.core.internal.bytebuddy.build.ToStringPlugin;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
-import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.GroupedFlux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class RefereneceExamples {
 
@@ -98,13 +94,16 @@ public class RefereneceExamples {
 
   @Test
   public void reduce(){
-    List<Integer> elements = new ArrayList<>();
-    Flux.just(1, 2, 3, 4)
+    Mono<Integer> mono = Flux.just(1, 2, 3, 4)
         .log()
-        .reduce(0, (a, b)-> a+b)
-        .subscribe(elements::add);
-    assertThat(elements).containsExactly(10);
+        .reduce(0, (a, b)-> a+b);
+
+    StepVerifier.create(mono)
+        .expectNext(10)
+        .expectComplete()
+        .verify();
   }
+
 
   @Test
   public void flatMap(){

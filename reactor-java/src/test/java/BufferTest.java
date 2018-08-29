@@ -1,8 +1,11 @@
+import domain.Key;
+import domain.Record;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class BufferTest {
   @Test
@@ -15,4 +18,44 @@ public class BufferTest {
         .verify();
   }
 
+  @Test
+  public void bufferUntil(){
+    Flux<Record> flux = Flux.just(
+        new Record(new Key(1, "A"), 1),
+        new Record(new Key(1, "B"), 1),
+        new Record(new Key(1, "A"), 2),
+        new Record(new Key(2, "A"), 1),
+        new Record(new Key(2, "C"), 1),
+        new Record(new Key(2, "C"), 2)
+    );
+
+    Predicate<Record> predicate = new Predicate<Record>() {
+      int current = 0;
+
+      @Override
+      public boolean test(Record record) {
+        if( record.key.time > current){
+          current = record.key.time;
+          return true;
+        }
+        return false;
+      }
+    };
+
+    StepVerifier.create(flux.bufferUntil(predicate, true))
+        .expectNext(Arrays.asList(
+            new Record(new Key(1, "A"), 1),
+            new Record(new Key(1, "B"), 1),
+            new Record(new Key(1, "A"), 2)
+        ))
+        .expectNext(Arrays.asList(
+            new Record(new Key(2, "A"), 1),
+            new Record(new Key(2, "C"), 1),
+            new Record(new Key(2, "C"), 2)
+        ))
+        .expectComplete()
+        .verify();
+  }
+
 }
+

@@ -4,8 +4,6 @@ import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 public class DistinctTest {
 
@@ -57,109 +55,4 @@ public class DistinctTest {
         .verify();
   }
 
-
-  @Test
-  public void bufferUntil(){
-    Flux<Record> flux = Flux.just(
-        new Record(new Key(1, "A"), 1),
-        new Record(new Key(1, "B"), 1),
-        new Record(new Key(1, "A"), 2),
-        new Record(new Key(2, "A"), 1),
-        new Record(new Key(2, "C"), 1),
-        new Record(new Key(2, "C"), 2)
-    );
-
-    Predicate<Record> predicate = new Predicate<Record>() {
-      int current = 0;
-
-      @Override
-      public boolean test(Record record) {
-        if( record.key.time > current){
-          current = record.key.time;
-          return true;
-        }
-        return false;
-      }
-    };
-
-    StepVerifier.create(flux.bufferUntil(predicate, true))
-        .expectNext(Arrays.asList(
-            new Record(new Key(1, "A"), 1),
-            new Record(new Key(1, "B"), 1),
-            new Record(new Key(1, "A"), 2)
-        ))
-        .expectNext(Arrays.asList(
-            new Record(new Key(2, "A"), 1),
-            new Record(new Key(2, "C"), 1),
-            new Record(new Key(2, "C"), 2)
-        ))
-        .expectComplete()
-        .verify();
-  }
-
-
-}
-
-class Key {
-  int time;
-  String name;
-
-  public Key(int time, String name) {
-    this.time = time;
-    this.name = name;
-  }
-
-  @Override
-  public String toString() {
-    return "Key{" +
-        "time=" + time +
-        ", name='" + name + '\'' +
-        '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Key key = (Key) o;
-    return time == key.time &&
-        Objects.equals(name, key.name);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(time, name);
-  }
-}
-class Record{
-  Key key;
-  int value;
-
-  public Record(Key key, int value) {
-    this.key = key;
-    this.value = value;
-  }
-
-  @Override
-  public String toString() {
-    return "Record{" +
-        "key=" + key +
-        ", value=" + value +
-        '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Record record = (Record) o;
-    return value == record.value &&
-        Objects.equals(key, record.key);
-  }
-
-  @Override
-  public int hashCode() {
-
-    return Objects.hash(key, value);
-  }
 }

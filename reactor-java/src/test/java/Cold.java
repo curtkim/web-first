@@ -134,7 +134,7 @@ public class Cold {
   }
 
   @Test
-  public void multi_thread(){
+  public void multi_thread() throws InterruptedException {
     List<Integer> elements = new ArrayList<>();
     Flux.just(1, 2, 3, 4)
         .log()
@@ -142,6 +142,7 @@ public class Cold {
         .subscribeOn(Schedulers.parallel())
         .subscribe(elements::add);
 
+    Thread.sleep(1000);
     System.out.println(elements);
   }
 

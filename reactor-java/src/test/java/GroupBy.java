@@ -4,6 +4,7 @@ import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.test.StepVerifier;
+import reactor.util.function.Tuples;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -33,15 +34,56 @@ public class GroupBy {
 
   @Test
   public void test2(){
-    Flux<Integer> flux = Flux.range(1, 100)
+    Flux<Pair> flux = Flux.range(1, 100)
         .groupBy(i -> i%2)
-        .concatMap( groupedFlux -> groupedFlux.reduce(0, (a,b)-> a+b) );
+        .concatMap( groupedFlux ->
+          groupedFlux.reduce(new Pair(groupedFlux.key(), 0), (a, b) -> a.add(b))
+        );
 
     StepVerifier.create(flux)
-        .expectNext(2500)
-        .expectNext(2550)
+        .expectNext(new Pair(1, 2500))
+        .expectNext(new Pair(0, 2550))
         .expectComplete()
         .verify();
   }
 
+}
+
+
+class Pair {
+  int group;
+  int value;
+
+  Pair(int group, int value){
+    this.group = group;
+    this.value = value;
+  }
+
+  Pair add(int value){
+    Pair pair = new Pair(this.group, this.value);
+    pair.value += value;
+    return pair;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Pair pair = (Pair) o;
+    return group == pair.group &&
+        value == pair.value;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(group, value);
+  }
+
+  @Override
+  public String toString() {
+    return "Pair{" +
+        "group=" + group +
+        ", value=" + value +
+        '}';
+  }
 }

@@ -49,15 +49,19 @@ public class WindowTest {
   }
 
   @Test
-  public void window_flatmap_groupby_concatmap(){
-    Flux<Record> flux = getSourceFlux();
+  public void window_flatmap_groupby_flatmap() throws InterruptedException {
+    Flux<Record> flux = getSourceFlux2();
 
     Flux<Record> result = flux.windowUntil(trigger, true)
         .flatMap(window ->
             window.groupBy(r -> r.key)
+                .log()
                 .flatMap(groupedFlux ->
-                    groupedFlux.reduce( (a,b)-> a.value > b.value ? a : b)));
+                    groupedFlux.reduce( (a,b)-> a.value > b.value ? a : b), 20000));
 
+    result.subscribe(System.out::println);
+    Thread.sleep(10000);
+    /*
     StepVerifier.create(result)
         .expectNext(new Record(new Key(1, "A"), 2))
         .expectNext(new Record(new Key(1, "B"), 1))
@@ -65,6 +69,14 @@ public class WindowTest {
         .expectNext(new Record(new Key(2, "C"), 2))
         .expectComplete()
         .verify();
+        */
+  }
+
+  Flux<Record> getSourceFlux2() {
+    int timeLength = 10;
+    int keyLength = 10000;
+    return Flux.range(0, timeLength*keyLength)
+        .map(i -> new Record(new Key(i /keyLength, i%keyLength+""), i));
   }
 
   @Test

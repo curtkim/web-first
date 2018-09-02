@@ -14,9 +14,14 @@ public class CombiningPublishersIntegrationTest {
 
   @Test
   public void givenFluxes_whenMergeDelayErrorIsInvoked_thenMergeDelayError() {
-    Flux<Integer> fluxOfIntegers = Flux.mergeDelayError(1,
-        evenNumbers.delayElements(Duration.ofMillis(2000L)),
-        oddNumbers.delayElements(Duration.ofMillis(1000L)));
+    // time : 0 1 2 3 4
+    // even :     2   4
+    // odd  :   1 3 5
+
+    int prefetch = 100;
+    Flux<Integer> fluxOfIntegers = Flux.mergeDelayError(prefetch,
+        evenNumbers.delayElements(Duration.ofMillis(200L)),
+        oddNumbers.delayElements(Duration.ofMillis(100L)));
 
     StepVerifier.create(fluxOfIntegers)
         .expectNext(1)
@@ -48,8 +53,8 @@ public class CombiningPublishersIntegrationTest {
   @Test
   public void givenFluxes_whenConcatIsInvoked_thenConcat() {
     Flux<Integer> fluxOfIntegers = Flux.concat(
-        evenNumbers.delayElements(Duration.ofMillis(2000L)),
-        oddNumbers.delayElements(Duration.ofMillis(1000L)));
+        evenNumbers.delayElements(Duration.ofMillis(200L)),
+        oddNumbers.delayElements(Duration.ofMillis(100L)));
 
     StepVerifier.create(fluxOfIntegers)
         .expectNext(2)
@@ -100,9 +105,9 @@ public class CombiningPublishersIntegrationTest {
         (a, b) -> a + b);
 
     StepVerifier.create(fluxOfIntegers)
-        .expectNext(5)
-        .expectNext(7)
-        .expectNext(9)
+        .expectNext(5) // 4+1
+        .expectNext(7) // 4+3
+        .expectNext(9) // 4+5
         .expectComplete()
         .verify();
 
@@ -156,8 +161,8 @@ public class CombiningPublishersIntegrationTest {
         (a, b) -> a + b);
 
     StepVerifier.create(fluxOfIntegers)
-        .expectNext(3)
-        .expectNext(7)
+        .expectNext(3) // 2+1
+        .expectNext(7) // 4+3
         .expectComplete()
         .verify();
   }
@@ -169,8 +174,8 @@ public class CombiningPublishersIntegrationTest {
             (a, b) -> a * b);
 
     StepVerifier.create(fluxOfIntegers)
-        .expectNext(2)
-        .expectNext(12)
+        .expectNext(2) // 2*1
+        .expectNext(12) // 4*3
         .expectComplete()
         .verify();
   }

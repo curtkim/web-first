@@ -55,7 +55,6 @@ public class WindowTest {
     Flux<Record> result = flux.windowUntil(trigger, true)
         .flatMap(window ->
             window.groupBy(r -> r.key)
-                .log()
                 .flatMap(groupedFlux ->
                     groupedFlux.reduce( (a,b)-> a.value > b.value ? a : b), 20000));
 
@@ -74,7 +73,7 @@ public class WindowTest {
 
   Flux<Record> getSourceFlux2() {
     int timeLength = 10;
-    int keyLength = 10000;
+    int keyLength = 100;
     return Flux.range(0, timeLength*keyLength)
         .map(i -> new Record(new Key(i /keyLength, i%keyLength+""), i));
   }

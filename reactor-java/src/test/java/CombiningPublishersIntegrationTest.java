@@ -69,15 +69,15 @@ public class CombiningPublishersIntegrationTest {
   @Test
   public void givenFluxes_whenMergeIsInvoked_thenMerge() {
     Flux<Integer> fluxOfIntegers = Flux.merge(
-        evenNumbers,
-        oddNumbers);
+        evenNumbers.delayElements(Duration.ofMillis(100L)),
+        oddNumbers.delayElements(Duration.ofMillis(80L)));
 
     StepVerifier.create(fluxOfIntegers)
-        .expectNext(2)
-        .expectNext(4)
-        .expectNext(1)
-        .expectNext(3)
-        .expectNext(5)
+        .expectNext(1) // 80ms
+        .expectNext(2) // 100ms
+        .expectNext(3) // 160ms
+        .expectNext(4) // 200ms
+        .expectNext(5) // 240ms
         .expectComplete()
         .verify();
   }

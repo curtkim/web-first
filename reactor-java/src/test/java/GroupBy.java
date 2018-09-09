@@ -1,13 +1,9 @@
-import domain.Key;
-import domain.Record;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.test.StepVerifier;
-import reactor.util.function.Tuples;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class GroupBy {
 

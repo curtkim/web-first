@@ -1,11 +1,11 @@
 package kafka;
 
+import domain2.Record;
+import domain2.Summary;
+import domain2.TimePredicate;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
-
-import java.util.Objects;
-import java.util.function.Predicate;
 
 public class PartitionWindowKindSummaryTest {
 
@@ -32,76 +32,6 @@ public class PartitionWindowKindSummaryTest {
     flux2.subscribe(System.out::println);
     //flux.subscribe(System.out::println);
     Thread.sleep(2300);
-  }
-}
-
-class Summary{
-  int partition;
-  long timestamp;
-  String kind;
-  int sum;
-
-  public Summary(int partition, String kind) {
-    this.partition = partition;
-    this.kind = kind;
-  }
-
-  public Summary add(Record r){
-    Summary s1 = new Summary(this.partition, this.kind);
-    s1.timestamp = r.timestamp / 1000 * 1000;
-    s1.sum = this.sum + r.value;
-    return s1;
-  }
-
-  @Override
-  public String toString() {
-    return "Summary{" +
-        "partition=" + partition +
-        ", timestamp=" + timestamp +
-        ", kind='" + kind + '\'' +
-        ", sum=" + sum +
-        '}';
-  }
-}
-
-class Record{
-  int partition;
-  long timestamp;
-  String kind;
-  int value;
-
-  public Record(int partition, long timestamp, String kind, int value) {
-    this.partition = partition;
-    this.timestamp = timestamp;
-    this.kind = kind;
-    this.value = value;
-  }
-
-  @Override
-  public String toString() {
-    return "Record{" +
-        "partition=" + partition +
-        ", timestamp=" + timestamp +
-        ", kind='" + kind + '\'' +
-        ", value=" + value +
-        '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Record record = (Record) o;
-    return partition == record.partition &&
-        timestamp == record.timestamp &&
-        value == record.value &&
-        Objects.equals(kind, record.kind);
-  }
-
-  @Override
-  public int hashCode() {
-
-    return Objects.hash(partition, timestamp, kind, value);
   }
 }
 
@@ -135,18 +65,5 @@ class RandomGenerator implements Runnable{
 }
 
 
-class TimePredicate implements Predicate<Record>{
-  long current = 0;
-
-  @Override
-  public boolean test(Record rec) {
-    long truncated = rec.timestamp/ 1000*1000;
-    //System.out.println(rec.timestamp + " " + truncated + " " + rec.partition + " " + rec.value);
-    if( truncated > current){
-      current = truncated;
-      return true;
-    }
-    return false;
-  }
-};
+;
 

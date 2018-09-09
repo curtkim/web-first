@@ -1,5 +1,5 @@
-import domain.Key;
-import domain.Record;
+import domain1.Key;
+import domain1.Record;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -8,6 +8,19 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class BufferTest {
+
+  @Test
+  public void overlap(){
+    StepVerifier.create(Flux.range(1, 10).buffer(5, 3))
+        .expectNext(Arrays.asList(1,2,3,4,5))
+        .expectNext(Arrays.asList(4,5,6,7,8))
+        .expectNext(Arrays.asList(7,8,9,10))
+        .expectNext(Arrays.asList(10))
+        .expectComplete()
+        .verify();
+  }
+
+
   @Test
   public void test0(){
     StepVerifier.create(Flux.just(1, 2, 3, 4, 5, 6).bufferUntil((i)-> i%2 == 0))

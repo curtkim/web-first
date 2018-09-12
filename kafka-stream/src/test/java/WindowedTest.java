@@ -6,13 +6,14 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.streams.*;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.TimeWindows;
-import org.apache.kafka.streams.kstream.Windowed;
+import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.kstream.internals.WindowedDeserializer;
 import org.apache.kafka.streams.kstream.internals.WindowedSerializer;
 import org.apache.kafka.streams.processor.StreamPartitioner;
+import org.apache.kafka.streams.state.KeyValueIterator;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyWindowStore;
+import org.apache.kafka.streams.state.Stores;
 import org.apache.kafka.test.TestUtils;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -42,7 +43,7 @@ public class WindowedTest {
   }
 
   @Test
-  public void shouldCountUsersPerRegion() throws Exception {
+  public void test() throws Exception {
     // Step 1: Configure and start the processor topology.
 
     StreamsBuilder builder = new StreamsBuilder();
@@ -50,16 +51,19 @@ public class WindowedTest {
     KStream<String, Integer> stream = builder.stream(inputTopic, Consumed.with(Serdes.String(), Serdes.Integer()));
     stream.groupByKey()
         .windowedBy(TimeWindows.of(TimeUnit.MINUTES.toMillis(1)))
-        .reduce((a,b)-> a+b)
+        .reduce((a,b)-> a+b, Materialized.as("queryStoreName"))
+        //.reduce((a,b)-> a+b, Materialized.as(Stores.persistentWindowStore("queryStoreName", 3*60*1000, 2, 60*1000, false)))
         .toStream()
         .to(outputTopic, Produced.with(windowedSerde, Serdes.Integer(), partitioner));
 
-    KafkaStreams streams = new KafkaStreams(builder.build(), getStreamProperties());
+    Topology topology = builder.build();
+    System.out.println(topology.describe());
+
+    KafkaStreams streams = new KafkaStreams(topology, getStreamProperties());
     streams.setUncaughtExceptionHandler((Thread thread, Throwable throwable) -> {
       System.err.println(throwable);
     });
     streams.start();
-
 
     // Step 2: Publish
     int MINUTE = 10;
@@ -75,6 +79,8 @@ public class WindowedTest {
       records2.add(new ProducerRecord<>(inputTopic, 1, l*1000, "B", 2));
     IntegrationTestUtils2.produceRecordsSynchronously(records2, getProducerProperties(), new StringSerializer(), new IntegerSerializer());
 
+    Thread.sleep(5*1000);
+
     // 파티션0
     IntegrationTestUtils2.produceRecordsSynchronously(records, getProducerProperties(), new StringSerializer(), new IntegerSerializer());
 
@@ -87,6 +93,14 @@ public class WindowedTest {
         windowedSerde.deserializer(),
         new IntegerDeserializer(),
         10*1000);
+
+    ReadOnlyWindowStore<String, Integer> windowStore =
+        streams.store("queryStoreName", QueryableStoreTypes.windowStore());
+    KeyValueIterator<Windowed<String>, Integer> iter =  windowStore.all();
+    while(iter.hasNext()){
+      System.out.println(iter.next());
+    }
+
     streams.close();
 
     for(ConsumerRecord<Windowed<String>, Integer> rec : results)
@@ -103,7 +117,7 @@ public class WindowedTest {
     // this integration test's timeout (30 secs) to ensure we observe the expected processing results.
     //streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 10 * 1000);
     //streamsConfiguration.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 10 * 1024 * 1024L);
-    streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 10*1000);
+    streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 5*1000);
     streamsConfiguration.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 10*1024*1024L);
 
     streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");

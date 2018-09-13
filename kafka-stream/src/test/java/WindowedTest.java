@@ -51,8 +51,8 @@ public class WindowedTest {
     KStream<String, Integer> stream = builder.stream(inputTopic, Consumed.with(Serdes.String(), Serdes.Integer()));
     stream.groupByKey()
         .windowedBy(TimeWindows.of(TimeUnit.MINUTES.toMillis(1)))
-        .reduce((a,b)-> a+b, Materialized.as("queryStoreName"))
-        //.reduce((a,b)-> a+b, Materialized.as(Stores.persistentWindowStore("queryStoreName", 3*60*1000, 2, 60*1000, false)))
+        //.reduce((a,b)-> a+b, Materialized.as("queryStoreName"))
+        .reduce((a,b)-> a+b, Materialized.as(Stores.persistentWindowStore("queryStoreName", 3*60*1000, 2, 60*1000, false)))
         .toStream()
         .to(outputTopic, Produced.with(windowedSerde, Serdes.Integer(), partitioner));
 
@@ -79,6 +79,8 @@ public class WindowedTest {
       records2.add(new ProducerRecord<>(inputTopic, 1, l*1000, "B", 2));
     IntegrationTestUtils2.produceRecordsSynchronously(records2, getProducerProperties(), new StringSerializer(), new IntegerSerializer());
 
+
+    // COMMIT_INTERVAL_MS_CONFIG이 넘긴다.
     Thread.sleep(5*1000);
 
     // 파티션0
@@ -96,15 +98,21 @@ public class WindowedTest {
 
     ReadOnlyWindowStore<String, Integer> windowStore =
         streams.store("queryStoreName", QueryableStoreTypes.windowStore());
-    KeyValueIterator<Windowed<String>, Integer> iter =  windowStore.all();
-    while(iter.hasNext()){
-      System.out.println(iter.next());
-    }
+
+    printIterator(windowStore.fetchAll(60000, 60000));
+    printIterator(windowStore.all());
 
     streams.close();
 
     for(ConsumerRecord<Windowed<String>, Integer> rec : results)
       System.out.println(rec + " " + rec.key().window().start() + "~" + rec.key().window().end());
+  }
+
+  private void printIterator(KeyValueIterator<Windowed<String>, Integer> iter){
+    while(iter.hasNext()){
+      System.out.println(iter.next());
+    }
+    System.out.println();
   }
 
   private Properties getStreamProperties() {

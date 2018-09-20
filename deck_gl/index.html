@@ -23,15 +23,15 @@
   </head>
   <body>
     <div style="z-index: 999999; background-color: silver">
-      <input type="checkbox" name="" id="chkExtrude" checked></input>
+      extrude : <input type="checkbox" name="" id="chkExtrude" checked></input>
     </div>
     <div id="container">
       <div id="map"></div>
       <canvas id="deck-canvas"></canvas>
+      <div id="popup" style="border: 1px solid black; width:10%; height:10%; background-color: white;"></div>
     </div>
     <script src='app.js'></script>
     <script type="text/javascript">
-
       document.getElementById('deckgl-overlay').oncontextmenu = function (e) {
         e.preventDefault();
       };

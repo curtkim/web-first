@@ -2,8 +2,7 @@ import {Deck} from '@deck.gl/core';
 import {GridLayer} from '@deck.gl/layers';
 import Map from './mapbox';
 
-const DATA =
-  'sf-bike-parking.json'; //eslint-disable-line
+const DATA = 'sf-bike-parking.json'; //eslint-disable-line
 // Set your mapbox token here
 const MAPBOX_TOKEN = process.env.MapboxAccessToken; // eslint-disable-line
 

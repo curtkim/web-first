@@ -10,6 +10,8 @@ repositories {
 
 dependencies {
     compile "org.apache.avro:avro:1.8.2"
+    compile 'net.agkn:hll:1.6.0'
+
     //compile "org.apache.avro:avro-tools:1.8.2"
     compile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'

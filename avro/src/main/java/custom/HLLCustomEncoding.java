@@ -16,7 +16,7 @@ public class HLLCustomEncoding extends CustomEncoding<HLL> {
     List<Schema> union = Arrays.asList(
         Schema.create(Schema.Type.NULL),
         Schema.create(Schema.Type.BYTES));
-    //union.get(1).addProp("CustomEncoding", "UUIDAsBytesEncoding");
+    union.get(1).addProp("CustomEncoding", "HLLAsBytesEncoding");
     schema = Schema.createUnion(union);
   }
 

@@ -1,7 +1,8 @@
 import { marbles } from "rxjs-marbles/mocha";
 import { map } from "rxjs/operators";
-import { throttleTime } from 'rxjs/operators';
-import { merge, zip } from 'rxjs';
+import { throttleTime, distinctUntilChanged } from 'rxjs/operators';
+import { merge, zip, from } from 'rxjs';
+import {expect} from 'chai'
 
 describe("rxjs-marbles", () => {
 
@@ -42,6 +43,14 @@ describe("rxjs-marbles", () => {
 
         const zipped = zip(e1, e2).pipe(map(([a, b]) => `${a}${b}`) )
         m.expect(zipped).toBeObservable(expected, {A: 'a1', B: 'b2', C: 'c3', D: 'd4', E: 'e5'});
+    }));
+
+    it("distinctUntilChanged", marbles(m=> {
+        const myArrayWithDuplicatesInARow = from([1, 1, 2, 2, 3, 1, 2, 3]);
+        const distinct = myArrayWithDuplicatesInARow.pipe(distinctUntilChanged());
+        let arr = [];
+        distinct.subscribe((e)=> arr.push(e))
+        expect(arr).to.eql([1,2,3,1,2,3]);
     }));
 
 });

@@ -1,7 +1,7 @@
 import { marbles } from "rxjs-marbles/mocha";
 import { map } from "rxjs/operators";
 import { throttleTime } from 'rxjs/operators';
-import { merge } from 'rxjs';
+import { merge, zip } from 'rxjs';
 
 describe("rxjs-marbles", () => {
 
@@ -33,6 +33,15 @@ describe("rxjs-marbles", () => {
 
         m.expect(e1.pipe(throttleTime(3))).toBeObservable(expected);
         m.expect(e1).toHaveSubscriptions(subs);
+    }));
+
+    it("zip", marbles(m => {
+        const e1 =  m.cold('abcde|');
+        const e2 =  m.cold('12345|');
+        const expected =   'ABCDE|';
+
+        const zipped = zip(e1, e2).pipe(map(([a, b]) => `${a}${b}`) )
+        m.expect(zipped).toBeObservable(expected, {A: 'a1', B: 'b2', C: 'c3', D: 'd4', E: 'e5'});
     }));
 
 });

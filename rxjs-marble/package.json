@@ -1,0 +1,23 @@
+{
+  "name": "rxjs-marble",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "rxjs": "^6.3.3",
+    "typescript": "^3.1.6"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "rxjs-marbles": "^4.3.2",
+    "ts-node": "^7.0.1"
+  },
+  "scripts": {
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+  },
+  "author": "",
+  "license": "ISC"
+}

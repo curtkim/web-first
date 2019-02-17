@@ -9,4 +9,5 @@
 - https://babeljs.io/docs/en/learn/
 
 ## rxjs
+- https://medium.freecodecamp.org/rxjs-and-node-8f4e0acebc7c
 - switchmap: https://blog.angular-university.io/rxjs-switchmap-operator/

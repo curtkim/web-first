@@ -60,6 +60,11 @@ map.on("load", function() {
 
   console.log(map.project([-121.4, 40.4])) // {x:500, y:250}
 });
+
+map.on("pitchend", function() {
+  console.log(map.getPitch())
+  console.log(map.getBounds())
+});
 </script>
 
 </body>

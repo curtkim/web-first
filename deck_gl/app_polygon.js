@@ -20,8 +20,7 @@ const map = new Map({
   viewState: INITIAL_VIEW_STATE
 });
 
-function newLayer(extruded, factor){
-  console.log(extruded)
+function newLayer(extruded, getElevation){
   return new PolygonLayer({
     id: 'polygon-layer',
     data: DATA,
@@ -32,7 +31,7 @@ function newLayer(extruded, factor){
     wireframe: true,
     lineWidthMinPixels: 1,
     getPolygon: d => d.contour,
-    getElevation: d => d.population / d.area / factor,
+    getElevation: getElevation,
     getFillColor: d => [d.population / d.area / 60, 140, 0],
     getLineColor: [80, 80, 80],
     getLineWidth: 1,
@@ -45,7 +44,6 @@ function newLayer(extruded, factor){
       //setTooltip(`${object.zipcode}\nPopulation: ${object.population}`)
     },
     onClick: (e) => {
-      console.log(e)
       const object = e.object
       const el = document.getElementById('popup')
       el.innerHTML = `${object.zipcode}\nPopulation: ${object.population}`
@@ -56,7 +54,14 @@ function newLayer(extruded, factor){
 
 }
 
-const layer = newLayer(true, 10)
+function getElevation1(d){
+  return d.population / d.area / 10;
+}
+function getElevation2(d){
+  return d.population / 10;
+}
+
+const layer = newLayer(true, getElevation1)
 
 export const deck = new Deck({
   canvas: 'deck-canvas',
@@ -65,17 +70,47 @@ export const deck = new Deck({
   initialViewState: INITIAL_VIEW_STATE,
   controller: true,
   onViewStateChange: ({viewState}) => {
-    console.log(viewState)
+    //console.log(viewState)
     map.setProps({viewState});
   },
   layers: [ layer ]
 });
 
 
+let a = true
+
 document.getElementById('chkExtrude').onchange = function(){
   deck.setProps({
     layers: [
-      newLayer(document.getElementById('chkExtrude').checked, Math.random()*10)
+      newLayer(
+        document.getElementById('chkExtrude').checked,
+        a ? getElevation1 : getElevation2
+      )
+    ]
+  })
+}
+
+
+
+document.getElementById('chkElevation').onchange = function(){
+  a = !a
+  console.log('a', a)
+
+  deck.setProps({
+    layers: [
+      newLayer(
+        !document.getElementById('chkExtrude').checked,
+        a ? getElevation1 : getElevation2
+      )
+    ]
+  })
+
+  deck.setProps({
+    layers: [
+      newLayer(
+        document.getElementById('chkExtrude').checked,
+        a ? getElevation1 : getElevation2
+      )
     ]
   })
 }

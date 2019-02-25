@@ -28,6 +28,10 @@ public class ImageConvolution
 
     public void set(int x, int y, int value)
     {  dataArray[y * width + x] = value;  }
+
+    public int sumAll() {
+      return sum(dataArray);
+    }
   }
 
   private static int bound(int value, int endIndex)
@@ -144,10 +148,12 @@ public class ImageConvolution
          4,  16,  26,  16,  4,
          1,  4,  7,  4,  1,
     };
+    System.out.println(sum(k));
     ArrayData kernel = new ArrayData(k, kernelWidth, kernelHeight);
 
     long startTime = System.currentTimeMillis();
     ArrayData[] dataArrays = getArrayDatasFromImage("pentagon.png");
+
     System.out.println(String.format("load %d", System.currentTimeMillis() - startTime));
     System.out.println(dataArrays.length);
     for (int i = 0; i < dataArrays.length; i++)
@@ -157,5 +163,12 @@ public class ImageConvolution
     writeOutputImage("pentagon_conv.png", dataArrays);
     System.out.println(String.format("write %d", System.currentTimeMillis() - startTime));
     return;
+  }
+
+  static int sum(int[] arr) {
+    int sum = 0;
+    for(int i = 0; i < arr.length; i++)
+      sum += arr[i];
+    return sum;
   }
 }

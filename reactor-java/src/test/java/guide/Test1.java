@@ -101,6 +101,7 @@ public class Test1 {
     }
     return "OK " + i;
   }
+
   @Test
   public void errorHandlingPropagateUnwrap() {
     Flux<String> converted = Flux

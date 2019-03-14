@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Cold {
+public class ColdHot {
 
   @Test
   public void test0(){
@@ -28,7 +28,6 @@ public class Cold {
     assertThat(elements).containsExactly(2,4,6);
     assertThat(elements2).containsExactly(3,6);
   }
-
 
   @Test
   public void test1(){

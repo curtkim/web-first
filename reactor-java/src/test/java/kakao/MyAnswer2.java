@@ -15,7 +15,7 @@ public class MyAnswer2 {
                 .groupBy(Function.identity())
                 .flatMap(grouped -> Flux.zip(Flux.just(grouped.key()), grouped.count()))
         )
-        //.publishOn(Schedulers.single())
+        .publishOn(Schedulers.single())
         .log()
         .groupBy(tuple -> tuple.getT1())
         .flatMap(grouped -> Flux.zip(Flux.just(grouped.key()), grouped.reduce(0L, (a, tuple)-> a+tuple.getT2())))

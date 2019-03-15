@@ -1,3 +1,5 @@
+package old2;
+
 import domain1.Key;
 import domain1.Record;
 import org.junit.Test;

@@ -1,3 +1,5 @@
+package old2;
+
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -46,7 +48,7 @@ class Summary {
 
   @Override
   public String toString() {
-    return "Summary{" +
+    return "old2.Summary{" +
         "time=" + time +
         ", kind='" + kind + '\'' +
         ", sum=" + sum +

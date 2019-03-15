@@ -1,3 +1,5 @@
+package old2;
+
 import java.time.Duration;
 
 import org.junit.Test;

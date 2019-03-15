@@ -1,3 +1,5 @@
+package old2;
+
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
@@ -77,7 +79,7 @@ class Pair {
 
   @Override
   public String toString() {
-    return "Pair{" +
+    return "old2.Pair{" +
         "group=" + group +
         ", value=" + value +
         '}';

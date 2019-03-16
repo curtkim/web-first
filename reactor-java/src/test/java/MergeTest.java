@@ -2,12 +2,41 @@ import domain2.Record;
 import domain2.TimePredicate;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MergeTest {
+
+  @Test
+  public void test() {
+    Scheduler single = Schedulers.immediate();
+
+    Flux flux1 = SampleTest.interval(1, 1, 10);
+    Flux flux2 = SampleTest.interval(2, 2, 20);
+    Flux flux3 = SampleTest.interval(3, 3, 20);
+
+    Flux.merge(flux1, flux2, flux3)
+        .publishOn(single)
+        .doOnNext(it -> {
+          System.out.println(Thread.currentThread().getName() + " " + it);
+        })
+        .doOnComplete(()-> {
+          System.out.println(Thread.currentThread().getName() + " " + "done");
+          single.dispose();
+        })
+        .subscribe();
+
+    // TODO sleep을 없애려면 어떻게 해야 하나?
+    try {
+      Thread.sleep(21000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
 
   // time기준으로 sort되어 처리할 수 있는 방법을 찾자. 현재는 실패
   @Test

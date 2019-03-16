@@ -10,11 +10,15 @@ import reactor.util.function.Tuples;
 
 public class SampleTest {
 
-  Flux<Tuple2<Long, Long>> interval(long id) {
+  static Flux<Tuple2<Long, Long>> interval(long id, int interval, int duration) {
     return Flux.combineLatest((objects)->Tuples.of((Long)objects[0], (Long)objects[1]),
         Mono.just(id),
-        Flux.interval(Duration.ofSeconds(1)).take(Duration.ofSeconds(60))
+        Flux.interval(Duration.ofSeconds(interval)).take(Duration.ofSeconds(duration))
     );
+  }
+
+  static Flux<Tuple2<Long, Long>> interval(long id) {
+    return interval(id, 1, 60);
   }
 
   @Test

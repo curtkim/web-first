@@ -9,6 +9,18 @@ import reactor.test.StepVerifier;
 import java.util.function.Predicate;
 
 public class WindowTest {
+
+  @Test
+  public void test(){
+    StepVerifier.create(
+      Flux.range(0, 10)
+          .window(3)
+          .flatMap(windowed -> windowed.count())
+    ).expectSubscription()
+        .expectNext(3l,3l,3l,1l)
+        .verifyComplete();
+  }
+
   Predicate<Record> trigger = new Predicate<Record>() {
     int current = 0;
 

@@ -1,3 +1,5 @@
+package old2;
+
 import domain2.Record;
 import domain2.TimePredicate;
 import org.junit.Test;

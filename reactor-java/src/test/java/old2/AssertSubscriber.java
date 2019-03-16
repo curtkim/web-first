@@ -1,4 +1,4 @@
-/*
+package old2;/*
  * Copyright (c) 2011-2017 Pivotal Software Inc, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +62,7 @@ import reactor.util.context.Context;
  * <p>Usage:
  * <pre>
  * {@code
- * AssertSubscriber
+ * old2.AssertSubscriber
  *   .subscribe(publisher)
  *   .await()
  *   .assertValues("ABC", "DEF");
@@ -204,7 +204,7 @@ public class AssertSubscriber<T>
    * <p>Be sure at least a publisher has subscribed to it via {@link Publisher#subscribe(Subscriber)}
    * before use assert methods.
    * @param <T> the observed value type
-   * @return a fresh AssertSubscriber instance
+   * @return a fresh old2.AssertSubscriber instance
    */
   public static <T> AssertSubscriber<T> create() {
     return new AssertSubscriber<>();
@@ -217,7 +217,7 @@ public class AssertSubscriber<T>
    * before use assert methods.
    * @param n Number of elements to request (can be 0 if you want no initial demand).
    * @param <T> the observed value type
-   * @return a fresh AssertSubscriber instance
+   * @return a fresh old2.AssertSubscriber instance
    */
   public static <T> AssertSubscriber<T> create(long n) {
     return new AssertSubscriber<>(n);

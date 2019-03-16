@@ -3,21 +3,24 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+
 
 public class FluxGrid {
 
-  public static <T> List<List<T>> partition(List<T> list, int size) {
-    final AtomicInteger counter = new AtomicInteger(0);
-
-    return new ArrayList(
-        list.stream()
-            .collect(Collectors.groupingBy(it -> counter.getAndIncrement() % size))
-            .values());
+  @Test
+  public void test2() {
+    List<Integer> jobs = Arrays.asList(0, 1, 2, 3);
+    StepVerifier.create(
+      Flux.fromIterable(jobs)
+          .window(2)
+          .concatMap(it -> it.map(i -> Flux.range(i*2, 2)))
+          .flatMap(it -> it)
+    )
+        .expectSubscription()
+        .expectNext(0, 1, 2, 3, 4, 5, 6, 7)
+        .verifyComplete();
   }
 
   @Test

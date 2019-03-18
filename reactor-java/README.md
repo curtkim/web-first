@@ -3,3 +3,4 @@
 - https://dzone.com/articles/spring-boot-server-sent-events-tutorial
 - https://simonbasle.github.io/2017/10/file-reading-in-reactor/
 - https://spring.io/guides/gs/spring-data-reactive-redis/
+- https://github.com/reactor/reactive-streams-commons/issues/21

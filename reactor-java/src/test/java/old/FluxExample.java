@@ -78,7 +78,8 @@ public class FluxExample {
           }
 
           @Override
-          public void onError(Throwable t) {}
+          public void onError(Throwable t) {
+          }
 
           @Override
           public void onComplete() {}

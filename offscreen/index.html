@@ -1,0 +1,92 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="app.css">
+<script id="workerScript" type="text/javascript">
+  // This script is written in such a way that it can be used
+  // inline or converted to a url blob and used as a web worker.
+
+  const msPerFrame = 1000 / 60;
+  const squareSize = 50;
+  const margin = 1;
+
+  let canvas;
+  let ctx;
+  let shouldSlow = false;
+
+  function animate() {
+    const totalSize = squareSize + (margin) * 2;
+
+    const frameNo = Math.floor(performance.now() / msPerFrame);
+    const moveBy = frameNo % totalSize;
+
+    const across = Math.ceil(canvas.width / squareSize);
+    const down = Math.ceil(canvas.height / squareSize);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for(let a = -3; a <= across; a++) {
+      for(let d = -3; d <= down; d++) {
+        const x = a * totalSize + moveBy;
+        const y = d * totalSize;
+
+        ctx.fillStyle = d % 2 === 0 ? '#fa8520' : '#2fbee9';
+        ctx.fillRect(x, y, squareSize, squareSize);
+      }
+    }
+
+    // Do a big loop to slow down the thread
+    if(shouldSlow) {
+      for(let i=0; i < 500000000; i++) {
+        // slow ...
+      }
+    }
+
+    self.canvasRafId = self.requestAnimationFrame(animate);
+  }
+
+  function slow(slow) {
+    shouldSlow = slow;
+  }
+
+  self.onmessage = function(ev) {
+    if(ev.data.msg === 'init') {
+      canvas = ev.data.canvas || window.canvas;
+      ctx = canvas.getContext('2d');
+      animate();
+    } else if(ev.data.msg === 'slow') {
+      slow(ev.data.shouldSlow);
+    }
+  }
+</script>
+</head>
+
+<body>
+  <div id="content">
+    <div id="unsupported-warning" style="display: none">Your browser does not support Offscreen Canvas. Please try this demo in one that does, such as Chrome 69+.</div>
+    <div id="explanation">
+      <h1>Main Thread Canvas vs Web Worker (Offscreen) Canvas</h1>
+      <p>This simple example shows how running a canvas on a web worker (that is, an <em>offscreen canvas</em>) can prevent jank and other performance issues.</p>
+      <p>First, run the simple animation by pressing the <strong>Start Animation</strong> button. This runs on the main thread. If the animation takes a long time, then the whole page will become unresponsive. Note the timestamp, next to the buttons, which updates with every frame.</p>
+      <p>Now, press the <strong>Slow Animation</strong> button. This includes a very large loop in each animation frame, causing it to take a long time. The animation will become jumpy, compared to the smooth motion before. Notice that the timestamp is also slow to update, compared to previously. This is because the whole page cannot update until the animation has completed, as it is blocking the single thread. Try typing in the box below, and you will see that it feels unresponsive.</p>
+      <p><input type="text" placeholder="Try typing here when slowed..." /></p>
+      <p>Press the <strong>Transfer Canvas to Worker</strong> button. This uses the new <em>canvas.transferControlToOffscreen</em> function to take a canvas which is in the DOM and give control of it to a web worker. Notice that the animation is smooth, as it resets to normal speed. Now, press the <strong>Slow Animation</strong> button. The animation slows down, but the timer continues at a normal speed. Additionally, you can type like normal in the text box.</p>
+    </div>
+
+    <div id="controls">
+      <button id="toggle-animation" onclick="toggleAnimation();"><span class="action">Start</span> Animation</button>
+      <button id="toggle-slow" onclick="toggleSlow();"><span class="action">Slow</span> Animation</button>
+      <button id="toggle-thread" onclick="toggleThread();" class="if-">Transfer Canvas to <span class="target">Worker</span></button>
+      <span id="time"></span>
+    </div>
+  </div>
+
+  <div id="canvas-container"></div>
+  <div id="canvas-info">
+    <span class="slow"></span>
+    <span class="thread"></span>
+  </div>
+
+  <script type="text/javascript" src="app.js"></script>
+
+</body>
+</html>

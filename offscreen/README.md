@@ -1,0 +1,1 @@
+from https://newinweb.com/2018/09/10/offscreen-canvas/

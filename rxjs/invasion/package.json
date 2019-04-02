@@ -1,0 +1,19 @@
+{
+  "name": "typescript-5i4anz",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "rxjs": "6.4.*"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.4.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "scripts": {
+    "start": "node_modules/.bin/webpack-dev-server --mode development",
+    "build": "NODE_ENV=production webpack --progress --hide-modules"
+  }
+}

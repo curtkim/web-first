@@ -22,8 +22,8 @@ describe("rxjs-marbles", () => {
     it("merge", marbles(m => {
         var e1 = m.hot('----a--^--b-------c--|');
         var e2 = m.hot(  '---d-^--e---------f-----|');
-        var expected =      '---(be)----c-f-----|';
-        
+        var expected =        '---(be)----c-f-----|';
+
         m.expect(merge(e1, e2)).toBeObservable(expected);
     }));
 

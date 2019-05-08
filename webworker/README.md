@@ -1,0 +1,1 @@
+https://github.com/Qwaz/webworker-with-typescript

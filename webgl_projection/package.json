@@ -1,0 +1,25 @@
+{
+  "name": "webgl_projection",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "gl-matrix": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-mocha": "^6.0.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.4.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "scripts": {
+    "start": "node_modules/.bin/webpack-dev-server --mode development",
+    "build": "NODE_ENV=production webpack --progress --hide-modules",
+    "test": "node_modules/.bin/mocha -r ts-node/register *.spec.ts"
+  }
+}

@@ -8,7 +8,8 @@ const CONFIG = {
         app: './app.js',
         mesh: './mesh.js',
         pointcloud: './pointcloud.js',
-        pointcloud2: './pointcloud2.js'
+        pointcloud2: './pointcloud2.js',
+        scenegraph: './scenegraph.js'
     },
 
     module: {

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "webpack && cp *.html dist/ && && cp *.json dist/",
+    "build": "webpack && cp *.html dist/ && cp *.json dist/",
     "start": "webpack-dev-server --progress --hot --open",
     "start-local": "webpack-dev-server --env.local --progress --hot --open"
   },

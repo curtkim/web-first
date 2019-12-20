@@ -21,11 +21,19 @@ public class Tutorial {
   @Test
   public void initialized() {
     Mono<String> nonEmptyMono = Mono.just("Joel");
-    StepVerifier.create(nonEmptyMono).expectNext("Joel").verifyComplete();
+    StepVerifier.create(nonEmptyMono)
+            .expectNext("Joel")
+            .verifyComplete();
+
     Flux<String> nonEmptyFlux = Flux.just("John", "Mike", "Sarah");
-    StepVerifier.create(nonEmptyFlux).expectNext("John", "Mike", "Sarah").verifyComplete();
+    StepVerifier.create(nonEmptyFlux)
+            .expectNext("John", "Mike", "Sarah")
+            .verifyComplete();
+
     Flux<String> fluxFromIterable = Flux.fromIterable(Arrays.asList("Tom", "Hardy", "Bane"));
-    StepVerifier.create(fluxFromIterable).expectNext("Tom", "Hardy", "Bane").verifyComplete();
+    StepVerifier.create(fluxFromIterable)
+            .expectNext("Tom", "Hardy", "Bane")
+            .verifyComplete();
   }
 
   @Test

@@ -2,6 +2,7 @@ package gem;
 
 import org.junit.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class Ex08_SwitchIfEmpty {
 
@@ -10,7 +11,7 @@ public class Ex08_SwitchIfEmpty {
     Flux source = Flux.empty();
 
     source
-        .switchIfEmpty(Flux.empty().doOnComplete(() -> System.out.println("Empty source!")))
+        .switchIfEmpty(Mono.just("A"))
         .subscribe(System.out::println);
   }
 }

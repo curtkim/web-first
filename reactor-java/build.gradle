@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compile 'io.projectreactor:reactor-core:3.2.6.RELEASE'
-    compile 'io.projectreactor.addons:reactor-extra:3.2.6.RELEASE'
+    //compile 'io.projectreactor.addons:reactor-extra:3.2.6.RELEASE'
 
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('org.springframework.boot:spring-boot-starter-data-redis-reactive:2.0.4.RELEASE')

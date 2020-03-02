@@ -3,23 +3,20 @@ import React, {PureComponent} from 'react';
 import {render} from 'react-dom';
 import DeckGL, {COORDINATE_SYSTEM, PointCloudLayer, OrbitView, LinearInterpolator} from 'deck.gl';
 
-import {LASWorkerLoader} from '@loaders.gl/las';
+
+import {PCDWorkerLoader} from '@loaders.gl/pcd';
 import {registerLoaders} from '@loaders.gl/core';
 
 // Additional format support can be added here, see
 // https://github.com/uber-web/loaders.gl/blob/master/docs/api-reference/core/register-loaders.md
-registerLoaders(LASWorkerLoader);
+registerLoaders(PCDWorkerLoader);
 // registerLoaders(PLYWorkerLoader);
 
-// Data source: kaarta.com
-const LAZ_SAMPLE =
-  'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-laz/indoor.0.1.laz';
-// Data source: The Stanford 3D Scanning Repository
-// const PLY_SAMPLE =
-//   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-ply/lucy800k.ply';
+//const PCD_SAMPLE = 'test_ascii.pcd'
+const PCD_SAMPLE = 'test_simple_ascii.pcd'
 
 const INITIAL_VIEW_STATE = {
-  target: [0, 0, 0],
+  target: [0, 0, 0],//[210179, 433587, 0],
   rotationX: 0,
   rotationOrbit: 0,
   orbitAxis: 'Y',
@@ -28,8 +25,6 @@ const INITIAL_VIEW_STATE = {
   maxZoom: 10,
   zoom: 1
 };
-
-const transitionInterpolator = new LinearInterpolator(['rotationOrbit']);
 
 export class App extends PureComponent {
   constructor(props) {
@@ -41,29 +36,16 @@ export class App extends PureComponent {
 
     this._onLoad = this._onLoad.bind(this);
     this._onViewStateChange = this._onViewStateChange.bind(this);
-    this._rotateCamera = this._rotateCamera.bind(this);
   }
 
   _onViewStateChange({viewState}) {
     this.setState({viewState});
   }
 
-  _rotateCamera() {
-    const {viewState} = this.state;
-    this.setState({
-      viewState: {
-        ...viewState,
-        rotationOrbit: viewState.rotationOrbit + 30,
-        transitionDuration: 600,
-        transitionInterpolator,
-        onTransitionEnd: this._rotateCamera
-      }
-    });
-  }
-
   _onLoad({header, loaderData, progress}) {
     // metadata from LAZ file header
-    console.log(loaderData)
+    console.log(loaderData.header)
+    console.log(loaderData.attributes)
     const {mins, maxs} = loaderData.header;
 
     if (mins && maxs) {
@@ -91,8 +73,8 @@ export class App extends PureComponent {
 
     const layers = [
       new PointCloudLayer({
-        id: 'laz-point-cloud-layer',
-        data: LAZ_SAMPLE,
+        id: 'pcd-point-cloud-layer',
+        data: PCD_SAMPLE,
         onDataLoad: this._onLoad,
         coordinateSystem: COORDINATE_SYSTEM.IDENTITY,
         getNormal: [0, 1, 0],

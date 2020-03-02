@@ -9,6 +9,7 @@ const CONFIG = {
         mesh: './mesh.js',
         pointcloud: './pointcloud.js',
         pointcloud2: './pointcloud2.js',
+        pointcloud3: './pointcloud3.js',
         scenegraph: './scenegraph.js'
     },
 

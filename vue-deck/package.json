@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@deck.gl/mesh-layers": "^8.2.2",
     "@loaders.gl/las": "^2.2.7",
     "@loaders.gl/obj": "^2.2.7",
     "@loaders.gl/pcd": "^2.2.7",

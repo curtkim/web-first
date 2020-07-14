@@ -88,7 +88,11 @@ export default {
       if (mins && maxs) {
         const viewState= {
           ...INITIAL_VIEW_STATE,
-          target: [(mins[0] + maxs[0]) / 2, (mins[1] + maxs[1]) / 2, (mins[2] + maxs[2]) / 2],
+          target: [
+            (mins[0] + maxs[0]) / 2, 
+            (mins[1] + maxs[1]) / 2, 
+            (mins[2] + maxs[2]) / 2
+          ],
           zoom: Math.log2(window.innerWidth / (maxs[0] - mins[0])) - 1
         };
         console.log("onLoad view", viewState)

@@ -11,6 +11,7 @@
     "@loaders.gl/core": "2.2.6",
     "@loaders.gl/csv": "2.2.6",
     "@loaders.gl/las": "^2.2.7",
+    "@loaders.gl/obj": "^2.2.7",
     "@loaders.gl/pcd": "^2.2.7",
     "axios": "^0.19.2",
     "node-fetch": "^2.6.0"

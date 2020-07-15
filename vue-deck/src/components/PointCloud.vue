@@ -17,7 +17,6 @@ const INITIAL_VIEW_STATE = {
   pitch: 30
 };
 
-const URL = 'pointcloud.json'
 
 export default {
   name: 'PointCloud',
@@ -38,8 +37,8 @@ export default {
       layers: [
         new PointCloudLayer({
             id: 'point-cloud-layer',
-            data: URL,
-            pickable: false,
+            data: 'pointcloud.json',
+            pickable: true,
             coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
             coordinateOrigin: [-122.4, 37.74],
             radiusPixels: 4,
@@ -47,8 +46,8 @@ export default {
             getNormal: d => d.normal,
             getColor: d => d.color,
             onHover: ({object, x, y}) => {
-              const tooltip = object.position.join(', ');
-              console.log(tooltip, x, y);
+              //const tooltip = object.position.join(', ');
+              console.log(object, x, y);
             }
           })
       ]

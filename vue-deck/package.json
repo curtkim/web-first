@@ -15,6 +15,7 @@
     "@loaders.gl/ply": "^2.2.7",
     "core-js": "^3.6.5",
     "deck.gl": "^8.2.2",
+    "node-fetch": "^2.6.0",
     "react": "^16.3.0",
     "vue": "^2.6.11"
   },
@@ -45,7 +46,8 @@
         {
           "builtinGlobals": false
         }
-      ]
+      ],
+      "no-unused-vars": "off"
     }
   },
   "browserslist": [

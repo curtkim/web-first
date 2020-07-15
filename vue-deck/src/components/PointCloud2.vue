@@ -19,10 +19,10 @@ registerLoaders(PCDWorkerLoader);
 registerLoaders(OBJWorkerLoader);
 registerLoaders(PLYWorkerLoader);
 
-//const LAZ_SAMPLE = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-laz/indoor.0.1.laz';
+const LAZ_SAMPLE = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-laz/indoor.0.1.laz';
 //const PCD_SAMPLE = 'lidar.pcd';
 //const OBJ_SAMPLE = '000001_points.obj';
-const PLY_SAMPLE = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-ply/lucy800k.ply';
+//const PLY_SAMPLE = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/point-cloud-ply/lucy800k.ply';
 
 const INITIAL_VIEW_STATE = {
   target: [0, 0, 0],
@@ -34,6 +34,10 @@ const INITIAL_VIEW_STATE = {
   maxZoom: 10,
   zoom: 1
 };
+
+const DATA = [
+    {"position":[0,0,0]},
+]
 
 export default {
   name: 'PointCloud2',
@@ -62,7 +66,7 @@ export default {
       layers: [
         new PointCloudLayer({
           id: 'laz-point-cloud-layer',
-          data: PLY_SAMPLE,
+          data: LAZ_SAMPLE,
           onDataLoad: this._onLoad,
           coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
           getPosition: function(d){ 
@@ -72,14 +76,20 @@ export default {
           getNormal: [0, 1, 0],
           getColor: [255, 255, 255],
           opacity: 0.5,
-          pointSize: 5,
-          pickablepickable: true,
+          pointSize: 1,
+          pickable: true,
+          onHover: ({object, x, y}) => {
+            //const tooltip = object.position.join(', ');
+            console.log(object, x, y);
+          },
+
         })
       ]
     });
   },
   methods: {
     _onLoad({header, loaderData}) {
+      /*
       console.log("_onLoad")
       console.log(header)
       console.log(loaderData)      
@@ -98,6 +108,7 @@ export default {
         console.log("onLoad view", viewState)
         this.viewState = viewState;
       }
+      */
     }
   }
 }

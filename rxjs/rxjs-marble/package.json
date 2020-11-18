@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "rxjs": "^6.3.3",
+    "rxjs-marbles": "^6.0.1",
     "typescript": "^3.1.6"
   },
   "devDependencies": {
@@ -12,7 +13,6 @@
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "rxjs-marbles": "^4.3.2",
     "ts-node": "^7.0.1"
   },
   "scripts": {

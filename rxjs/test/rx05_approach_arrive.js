@@ -1,14 +1,18 @@
-import { interval, BehaviorSubject } from 'rxjs';
-import { map, distinctUntilChanged, takeWhile } from 'rxjs/operators';
+import { interval, BehaviorSubject, concat } from 'rxjs';
+import { map, distinctUntilChanged, takeWhile, take } from 'rxjs/operators';
 
 
 const config$ = new BehaviorSubject(1000)
 
-const gpsOrigin$ = interval(50)
 
-const distance$ = gpsOrigin$.pipe(
-  map(it=> 100-it),
-  takeWhile(it => it > 0)
+const distance$ = concat(
+  interval(50).pipe(
+    map(it=> 100-it),
+    takeWhile(it => it > 0)
+  ),
+  interval(50).pipe(
+    takeWhile(it => it < 100)
+  )
 )
 
 function mystring(dist) {
@@ -23,6 +27,7 @@ function mystring(dist) {
 const result$ = distance$.pipe(
   map(mystring),
   distinctUntilChanged(),
+  take(3),
 )
 
 distance$.subscribe(console.log)

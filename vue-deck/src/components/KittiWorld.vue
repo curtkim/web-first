@@ -13,6 +13,7 @@
 </template>
 
 <script>
+
 const fetch = require('node-fetch');
 
 import {Deck} from '@deck.gl/core';

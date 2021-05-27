@@ -13,17 +13,17 @@ registerLoaders(PCDWorkerLoader);
 // registerLoaders(PLYWorkerLoader);
 
 //const PCD_SAMPLE = 'test_ascii.pcd'
-const PCD_SAMPLE = 'test_simple_ascii.pcd'
+const PCD_SAMPLE = 'result.pcd'
 
 const INITIAL_VIEW_STATE = {
   target: [0, 0, 0],//[210179, 433587, 0],
   rotationX: 0,
-  rotationOrbit: 0,
-  orbitAxis: 'Y',
-  fov: 50,
+  rotationOrbit: -90,
+  //orbitAxis: 'X',
+  fov: 45,
   minZoom: 0,
   maxZoom: 10,
-  zoom: 1
+  zoom: 7
 };
 
 export class App extends PureComponent {
@@ -78,9 +78,9 @@ export class App extends PureComponent {
         onDataLoad: this._onLoad,
         coordinateSystem: COORDINATE_SYSTEM.IDENTITY,
         getNormal: [0, 1, 0],
-        getColor: [255, 255, 255],
-        opacity: 0.5,
-        pointSize: 0.5
+        //getColor: [255, 255, 255],
+        opacity: 1,
+        pointSize: 3
       })
     ];
 

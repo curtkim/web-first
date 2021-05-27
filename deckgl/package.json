@@ -3,21 +3,21 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "webpack && cp *.html dist/ && cp *.json dist/",
+    "build": "webpack && cp *.html dist/ && cp *.json dist/ && cp result.pcd dist/",
     "start": "webpack-dev-server --progress --hot --open",
     "start-local": "webpack-dev-server --env.local --progress --hot --open"
   },
   "dependencies": {
-    "@loaders.gl/core": "^2.0.4",
-    "@loaders.gl/gltf": "^2.0.4",
-    "@loaders.gl/las": "^2.0.4",
-    "@loaders.gl/obj": "^2.0.4",
-    "@loaders.gl/pcd": "^2.0.4",
+    "@loaders.gl/core": "^2.3.13",
+    "@loaders.gl/gltf": "^2.3.13",
+    "@loaders.gl/las": "^2.3.13",
+    "@loaders.gl/obj": "^2.3.13",
+    "@loaders.gl/pcd": "^2.3.13",
     "@std/esm": "^0.26.0",
-    "deck.gl": "^8.0.16",
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0",
-    "react-map-gl": "^5.0.10"
+    "deck.gl": "^8.4.16",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-map-gl": "^6.1.15"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

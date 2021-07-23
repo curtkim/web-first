@@ -1,8 +1,10 @@
 package session;
 
+import javafx.util.Pair;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+import reactor.util.function.Tuple2;
 
 public class SessionOperatorTest {
 
@@ -20,6 +22,13 @@ public class SessionOperatorTest {
         new UserLog("A", 502),
         new UserLog("A", 503)
     );
+
+    Flux<Session> sessionFlux = new SessionOperator(flux);
+
+    sessionFlux.zipWith(flux).subscribe((Tuple2<Session, UserLog> pair)->{
+      // 왜 T1이 session이 아닌가?
+      System.out.println(pair.getT1() + " " + pair.getT2());
+    });
 
     StepVerifier.create(new SessionOperator(flux))
         .expectNext(new Session("A", 1, 2))

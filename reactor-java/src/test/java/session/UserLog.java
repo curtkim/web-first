@@ -8,4 +8,12 @@ public class UserLog {
     this.userId = userId;
     this.time = time;
   }
+
+  @Override
+  public String toString() {
+    return "UserLog{" +
+        "userId='" + userId + '\'' +
+        ", time=" + time +
+        '}';
+  }
 }

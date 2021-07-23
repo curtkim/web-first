@@ -67,6 +67,7 @@ public class MonoTest {
 
   @Test
   public void test_when() {
+
     Flux<Long> a = Flux.interval(Duration.ofMillis(100)).take(5).log();
     Flux<Long> b = Flux.interval(Duration.ofMillis(100)).take(10).log();
 
@@ -77,5 +78,17 @@ public class MonoTest {
         .verifyComplete();
   }
 
+  @Test
+  public void test_when_error() {
 
+    Flux<Long> a = Flux.concat(Flux.interval(Duration.ofMillis(100)).take(5).log(), Flux.error(new RuntimeException("error")));
+    Flux<Long> b = Flux.interval(Duration.ofMillis(100)).take(10).log();
+
+    Mono<Void> mono = Mono.when(a, b);
+
+    StepVerifier.create(mono)
+        .expectSubscription()
+        .expectError(RuntimeException.class);
+        //.verifyComplete();
+  }
 }

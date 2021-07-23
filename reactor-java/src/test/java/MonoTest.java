@@ -17,6 +17,39 @@ public class MonoTest {
   }
 
   @Test
+  public void test_then() {
+    // just를 무력화 시키고, Mono<Void>를 만든다.
+    StepVerifier.create(Mono.just(1).then())
+        .expectSubscription()
+        .verifyComplete();
+  }
+
+  @Test
+  public void test_then_another() {
+    StepVerifier.create(Mono.just(1).then(Mono.just(2)))
+        .expectSubscription()
+        .expectNext(2)
+        .verifyComplete();
+  }
+
+  @Test
+  public void test_then_return() {
+    StepVerifier.create(Mono.just(1).thenReturn("Exit"))
+        .expectSubscription()
+        .expectNext("Exit")
+        .verifyComplete();
+  }
+
+  @Test
+  public void test_then_many() {
+    StepVerifier.create(Mono.just(1).thenMany(Flux.just(1,2,3)))
+        .expectSubscription()
+        .expectNext(1,2,3)
+        .verifyComplete();
+  }
+
+
+  @Test
   public void test_empty() {
     StepVerifier.create(Mono.empty())
         .expectSubscription()
@@ -43,5 +76,6 @@ public class MonoTest {
         .expectSubscription()
         .verifyComplete();
   }
+
 
 }

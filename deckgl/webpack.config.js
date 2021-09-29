@@ -7,10 +7,12 @@ const CONFIG = {
     entry: {
         arc: './arc.js',
         mesh: './mesh.js',
+        mesh2: './mesh2.js',
         pointcloud: './pointcloud.js',
         pointcloud2: './pointcloud2.js',
         pointcloud3: './pointcloud3.js',
-        scenegraph: './scenegraph.js'
+        scenegraph: './scenegraph.js',
+        avs: './avs.js',
     },
 
     module: {

@@ -5,7 +5,7 @@ const CONFIG = {
     mode: 'development',
 
     entry: {
-        app: './app.js',
+        arc: './arc.js',
         mesh: './mesh.js',
         pointcloud: './pointcloud.js',
         pointcloud2: './pointcloud2.js',

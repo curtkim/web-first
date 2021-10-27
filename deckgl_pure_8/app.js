@@ -17,7 +17,6 @@ const INITIAL_VIEW_STATE = {
 
 
 export const deck = new Deck({
-  container: 'my_canvas',
   initialViewState: INITIAL_VIEW_STATE,
   controller: true,
   layers: [

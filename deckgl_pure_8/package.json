@@ -1,0 +1,19 @@
+{
+  "name": "pure-js-basic",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --env development --hot --open --static .",
+    "build": "webpack build && cp *.html dist/"
+  },
+  "dependencies": {
+    "@deck.gl/core": "^8.6.0",
+    "@deck.gl/layers": "^8.6.0"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^3.0.7",
+    "webpack": "^5.10.1",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^4.3.1"
+  }
+}

@@ -1,3 +1,3 @@
 ## Examples
 
-- https://curtkim.github.io/first/deckgl/dist/index.html
+- https://curtkim.github.io/first/deckgl_react/dist/index.html

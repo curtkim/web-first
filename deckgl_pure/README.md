@@ -1,1 +1,1 @@
-https://curtkim.github.io/first/deck_gl/
+https://curtkim.github.io/first/deckgl_pure/

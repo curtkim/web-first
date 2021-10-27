@@ -1,1 +1,1 @@
-https://curtkim.github.io/first/vue-deck/dist/index.html
+https://curtkim.github.io/first/deckgl_vue/dist/index.html

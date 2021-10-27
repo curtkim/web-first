@@ -1,10 +1,11 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 const CONFIG = {
   mode: 'development',
 
   entry: {
-    app: './app.js'
+    arc: './arc.js',
+    lane: './lane.js',
+    lane_wgs: './lane_wgs.js',
+    fps: './fps.js'
   }
 
   //plugins: [new HtmlWebpackPlugin({title: 'deck.gl example'})]

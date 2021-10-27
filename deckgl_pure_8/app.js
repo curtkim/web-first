@@ -15,7 +15,9 @@ const INITIAL_VIEW_STATE = {
   pitch: 70
 };
 
+
 export const deck = new Deck({
+  container: 'my_canvas',
   initialViewState: INITIAL_VIEW_STATE,
   controller: true,
   layers: [

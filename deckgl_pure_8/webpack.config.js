@@ -5,7 +5,8 @@ const CONFIG = {
     arc: './arc.js',
     lane: './lane.js',
     lane_wgs: './lane_wgs.js',
-    fps: './fps.js'
+    fps: './fps.js',
+    orbitview: './orbitview.js'
   }
 
   //plugins: [new HtmlWebpackPlugin({title: 'deck.gl example'})]

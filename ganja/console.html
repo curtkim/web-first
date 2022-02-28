@@ -1,0 +1,48 @@
+<html>
+<head>
+<SCRIPT SRC="https://unpkg.com/ganja.js"></SCRIPT>
+</head>
+<body>
+<SCRIPT>
+// Create a Clifford Algebra with 2,0,1 metric. 
+Algebra(2,0,1,()=>{
+  
+  // in 2D PGA, grade-1 elements or vectors (e0,e1,e2) represent
+  // reflections AND lines (the invariant of a reflection)
+  // Ganja.js overloads scientific notation to specify basis blades.
+  var line = (a,b,c)=>a*1e1 + b*1e2 + c*1e0;
+  
+  // grade-2 elements or bivectors (e01,e02,e12) represent 
+  // rotations/translations AND points/infinite points (the invariant
+  // of a rotation/translation). We define them using the dualisation
+  // operator (!) to be independent of choice of basis (e12 vs e21) 
+  var point = (x,y)=>!(1e0 + x*1e1 + y*1e2);  
+  
+  // Define 3 points in the plane.
+  var A = point(-1, -1), B = point(-1, 1), C = point(1, 1); 
+  
+  // Define the line y = 0.5 - x <=> x + y - 0.5 = 0
+  var L = line(1, 1, -0.5)
+  
+  // A line can also be defined by JOINING (&) two points. 
+  // We define M as a function '()=>' so it will update when C or A 
+  // are dragged.
+  var M = C & A;
+  
+  // Similarly a point can be defined by MEETING (^) two lines.
+  // Again, we define point D as a function so it will update when
+  // L or M change. 
+  var D = L ^ M;
+  
+  console.log(D);
+  console.log(A); 
+});
+
+Algebra(3,0,1,()=>{
+  var point = (x,y,z)=>!(1e0 + x*1e1 + y*1e2 + z*1e3);
+  var A=point(0,.8,0)
+  console.log(A)
+})
+</SCRIPT>
+</body>
+</html>

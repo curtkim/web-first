@@ -9,6 +9,7 @@
     <router-link to="/asyncState">Async State</router-link>
     <router-link to="/about">Slot</router-link>
     <router-link to="/provide_inject">Provide Inject</router-link>
+    <router-link to="/store">Store</router-link>
   </p>
   <router-view></router-view>
 </template>

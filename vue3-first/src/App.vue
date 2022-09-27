@@ -4,9 +4,11 @@
 
 <template>
   <p>
-    <router-link to="/">Go to Home</router-link>
-    <router-link to="/detail/1">Go to 1</router-link>
-    <router-link to="/about">Go to About</router-link>
+    <router-link to="/">Home</router-link>
+    <router-link to="/detail/1">router path variable</router-link>
+    <router-link to="/asyncState">Async State</router-link>
+    <router-link to="/about">Slot</router-link>
+    <router-link to="/provide_inject">Provide Inject</router-link>
   </p>
   <router-view></router-view>
 </template>

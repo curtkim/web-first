@@ -10,6 +10,7 @@ import AsyncState from './views/AsyncState.vue'
 import ProvideInject from './views/ProvideInject.vue'
 import Store from './views/Store.vue'
 import ComponentRef from './views/ComponentRef.vue'
+import Props from './views/Props.vue'
 
 
 const routes = [
@@ -20,6 +21,7 @@ const routes = [
 	  { path: '/provide_inject', component: ProvideInject },
 	  { path: '/store', component: Store},
 	  { path: '/component_ref', component: ComponentRef},
+	  { path: '/props', component: Props},
 ]
 
 const router = createRouter({

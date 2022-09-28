@@ -6,6 +6,19 @@
   const zoom = ref(8)
   const rotation = ref(0)
 
+  const mapInstance = ref(null)
+  const viewInstance = ref(null)
+
+  
+  function centerChanged(center2){
+    console.log("centerChanged", center2, center.value, zoom.value);
+  }
+  function zoomChanged(newZoom){
+    console.log("zoomChanged", newZoom, zoom.value);
+  }
+  function mapClick(event){
+    console.log("mapClick", event)
+  }
 </script>
 
 <template>
@@ -15,11 +28,13 @@
       List
     </div>
 
-    <ol-map ref="map" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" 
-        style="position: absolute; left:10%; height:100%; width:90%;">
+    <ol-map ref="mapInstance" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" 
+        style="position: absolute; left:10%; height:100%; width:90%;"
+        @click="mapClick" >
 
-        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" 
-        :projection="projection" />
+
+        <ol-view ref="viewInstance" :center="center" :rotation="rotation" :zoom="zoom" 
+        :projection="projection" @centerChanged="centerChanged" @zoomChanged="zoomChanged"/>
 
         <ol-tile-layer>
           <ol-source-osm />

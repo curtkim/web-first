@@ -4,7 +4,7 @@ export default {
   props: ['msg'],
   created() {
     // props are exposed on `this`
-    console.log(this.msg)
+    //console.log(this.msg)
   }
 }
 

@@ -12,12 +12,18 @@ import {useMouse} from '../composable/mouse.js'
 const {x, y} = useMouse()
 const todoList = reactive([ "a111", "b222" ])
 
+function addTodo(){
+  todoList.push("c333");
+  //console.log(todoList) 
+  // Proxy{0: 'a111', 2: 'b222', 3: 'c333'}
+}
 </script>
 
 <template>
   <HelloWorld msg="Vite + Vue" /><br/>
 	<Hi msg="curt"/>
 	<Todo :list="todoList"/>
+  <button @click="addTodo">add todo</button><br/>
 
   <FancyButton>
     <span style="color:red">Click me!</span>

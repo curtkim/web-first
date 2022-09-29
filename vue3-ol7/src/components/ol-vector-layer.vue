@@ -5,7 +5,7 @@ import VectorSource from 'ol/source/Vector';
 import { ref, watch, onMounted, onUnmounted, provide, inject } from 'vue'
 
 const props = defineProps({
-  style: Function,
+  style: Function | Object,
   features: Array, 
 })
 

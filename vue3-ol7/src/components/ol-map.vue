@@ -6,18 +6,29 @@ import TileLayer from 'ol/layer/Tile';
 
 import {DAUM_ROAD_MAP} from '../ol-daum.js'
  
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, provide } from 'vue'
 
 function level2zoom(level){
-  return 14-level
+  return 14-level + 3
 }
 const props = defineProps({
   center: Array, 
   level: Number,
 })
 
-const mapContainer = ref(null)
-var map;
+const mapRef = ref(null)
+
+let map = new Map({
+  layers: [
+    new TileLayer({
+      source: DAUM_ROAD_MAP,
+    }),
+  ],
+  view: new View({
+    center: props.center,
+    zoom: level2zoom(props.level)
+  }),
+});
 
 watch(
   ()=> props.center, 
@@ -31,29 +42,22 @@ watch(
     map.getView().setZoom(level2zoom(newVaule))
   }
 )
-watch(props, (oldValue, newVaule)=>{
-  console.log('watch props', oldValue, newVaule)
-})
 
 onMounted(() => {
-  map = new Map({
-    target: mapContainer.value,
-    layers: [
-      new TileLayer({
-        source: DAUM_ROAD_MAP,
-      }),
-    ],
-    view: new View({
-      center: props.center,
-      zoom: level2zoom(props.level)
-    }),
-  });
+  map.setTarget(mapRef.value)
 })
+onUnmounted(()=>{
+  map.setTarget(null)
+  map = null;
+})
+provide('map', map)
 
 </script>
 
 <template>
-  <div ref="mapContainer" class="mapContainer"></div>
+  <div ref="mapRef" class="mapContainer">
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped>

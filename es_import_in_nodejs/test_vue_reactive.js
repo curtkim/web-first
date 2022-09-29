@@ -9,6 +9,7 @@ function increment(){
   state.count++
 }
 
+console.log(state.count == 0)
 console.log(state.count)
 console.log(A3.value)
 

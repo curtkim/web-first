@@ -10,6 +10,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "lodash": "^4.17.21",
     "vue": "^3.2.40"
   }
 }

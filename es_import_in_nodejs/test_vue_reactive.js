@@ -3,7 +3,7 @@ const setTimeout2 = (t, f)=>setTimeout(f, t)
 
 const state = reactive({count : 0})
 
-const A3 = computed(()=> state.count * 2) 
+const A3 = computed(()=> state.count * 2)  // computed는 Ref를 반환하는 것 같다.
 
 function increment(){
   state.count++
@@ -12,7 +12,7 @@ function increment(){
 console.log(state.count)
 console.log(A3.value)
 
-increment()
+increment()                 // increment는 state.count, A3.value에 바로 반영되었다.
 console.log(state.count)
 console.log(A3.value)
 

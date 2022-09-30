@@ -2,7 +2,7 @@
 //import {createEmpty, extend} from 'ol/extent';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-//import { GeometryCollection } from 'ol/geom';
+import { makeAllExtent } from '../ol-utils';
 
 import { ref, watch, onMounted, onUnmounted, provide, inject } from 'vue'
 
@@ -28,10 +28,10 @@ watch(
 )
 watch(
   ()=> props.features, 
-  (values, oldValues)=>{
+  (features, oldValues)=>{
     vectorLayer.getSource().clear()
-    vectorLayer.getSource().addFeatures(values)
-    //map.getView().fit(new GeometryCollection(values.map(it=> it.geometry)));
+    vectorLayer.getSource().addFeatures(features)
+    map.getView().fit( makeAllExtent(features))
   }
 )
 

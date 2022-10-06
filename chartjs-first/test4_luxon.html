@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0/dist/chartjs-adapter-luxon.min.js"
+    crossorigin="anonymous"></script>
+</head>
+<style type="text/css">
+  .chart {
+    width: 1000px !important;
+    height: 800px !important;
+  }
+</style>
+
+<body>
+  <div class="chart">
+    <canvas id="chartjs"></canvas>
+  </div>
+
+  <script type="text/javascript">
+    var ctx = document.getElementById("chartjs").getContext("2d");
+
+    /*
+    let data = [
+      { x: luxon.DateTime.local(2000, 1, 1, 0, 5), y: 0 },
+      { x: luxon.DateTime.local(2000, 1, 1, 4, 11), y: 10 },
+      { x: luxon.DateTime.local(2000, 1, 1, 12, 38), y: 20 },
+      { x: luxon.DateTime.local(2000, 1, 1, 15, 18), y: 30 },
+      { x: luxon.DateTime.local(2000, 1, 1, 18, 48), y: 40 },
+      { x: luxon.DateTime.local(2000, 1, 1, 22, 8), y: 50 },
+    ];
+    */
+
+    let data = [
+      { x: luxon.DateTime.local(2000, 1, 1, 0, 5).toMillis(), y: 0 },
+      { x: luxon.DateTime.local(2000, 1, 1, 4, 11).toMillis(), y: 10 },
+      { x: luxon.DateTime.local(2000, 1, 1, 12, 38).toMillis(), y: 20 },
+      { x: luxon.DateTime.local(2000, 1, 1, 15, 18).toMillis(), y: 30 },
+      { x: luxon.DateTime.local(2000, 1, 1, 18, 48).toMillis(), y: 40 },
+      { x: luxon.DateTime.local(2000, 1, 1, 22, 8).toMillis(), y: 50 },
+    ];
+
+    const chartData = {
+      datasets: [{
+        data: data
+      }]
+    };
+
+    const config = {
+      type: 'line',
+      data: chartData,
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            ticks: {
+              source: 'data'
+            },
+            time: {
+              unit: "minute",
+              tooltipFormat: "mm:ss:SSS",
+              displayFormats: {
+                minute: 'mm:ss',
+              }
+            },
+          }
+        },
+      },
+    };
+
+    var theChart = new Chart(ctx, config);
+  </script>
+</body>
+
+</html>

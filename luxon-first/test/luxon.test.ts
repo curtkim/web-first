@@ -29,4 +29,10 @@ describe('luxon', () => {
     const dt = DateTime.local(2017, 5, 15, 8, 30);
     expect(dt.toFormat('yyyy MM dd')).toBe("2017 05 15")
   })
+
+  it('from unix timestamp', ()=>{
+		const dt = DateTime.fromMillis(1542674993410);
+    expect(dt).toStrictEqual(DateTime.local(2018, 11, 20, 9, 49, 53, 410))
+  })
+
 })

@@ -1,0 +1,49 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div style="width:1000px; height: 800px;">
+  <canvas id="myChart"></canvas>
+</div>
+
+<script>
+
+    const now = new Date()
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                data: [
+                    {
+                        x: now.getTime() - 1000 * 3600 * 2,
+                        y: 50
+                    }, 
+                    {
+                        x: now.getTime() - 1000 * 3600 * 1,
+                        y: 60
+                    }, 
+                    {
+                        x: now.getTime(),
+                        y: 20
+                    }
+                ],
+            }],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

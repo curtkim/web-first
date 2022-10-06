@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/components//index.js'),
+      entry: resolve(__dirname, 'src/components/index.js'),
       name: 'MyLib',
       // the proper extensions will be added
       fileName: 'my-lib'

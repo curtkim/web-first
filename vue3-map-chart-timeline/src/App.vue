@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import olMap from './components/ol-map.vue'
 
-import { ref } from 'vue'
+import {ref} from 'vue'
 import Vue3ChartJs from '@j-t-mcc/vue3-chartjs'
 import OlVectorLayer from './components/ol-vector-layer.vue';
 
@@ -17,7 +17,7 @@ import sample2Json from './sample2.json'
 const sample1: Array<ComplexPoint> = sample1Json
 const sample2: Array<ComplexPoint> = sample2Json
 let sampleTimeMap = new Map<number, ComplexPoint>()
-sample1.forEach(pt=>{
+sample1.forEach(pt => {
   sampleTimeMap.set(pt.time, pt)
 })
 
@@ -32,10 +32,15 @@ const lineChart = {
         data: [40, 20, 80, 10]
       }
     ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false, // default is `true`, default `aspectRatio` is 2
   }
 }
 
-function makeFeatures(samples: Array<ComplexPoint>){
+
+function makeFeatures(samples: Array<ComplexPoint>) {
   return samples.map(it => {
     return new Feature({
       geometry: new Point([it.x, it.y]),
@@ -44,8 +49,8 @@ function makeFeatures(samples: Array<ComplexPoint>){
   })
 }
 
-const level = ref(10);
-const center = ref([195063,442898])
+const level = ref(5);
+const center = ref([195063, 442898])
 
 // const features = ref();
 // features.value = makeFeatures(sample1)
@@ -61,20 +66,22 @@ const currPts = ref()
 currPts.value = []
 
 
-function zoom(){
+function zoom() {
   level.value--
 }
+
 // function changeSample(){
 //   features.value = makeFeatures(sample2)
 // }
-function highlightPoint(time: number){
-  const pt: ComplexPoint|undefined = sampleTimeMap.get(time)
-  if( pt )
+function highlightPoint(time: number) {
+  const pt: ComplexPoint | undefined = sampleTimeMap.get(time)
+  if (pt)
     center.value = [pt.x, pt.y]
 }
-function enterPoint(time: number){
-  const pt: ComplexPoint|undefined = sampleTimeMap.get(time)
-  if( pt ) {
+
+function enterPoint(time: number) {
+  const pt: ComplexPoint | undefined = sampleTimeMap.get(time)
+  if (pt) {
     currPts.value = [
       new Feature({
         geometry: new Point([pt.x, pt.y]),
@@ -88,19 +95,26 @@ function enterPoint(time: number){
 
 <template>
   <div id="container">
+    <div class="header">
+      sample1
+    </div>
+
     <div class="left">
-      left<br/>
+      <button @click="resizeChart">resize</button>
       {{ level }}
-      <button @click="zoom">확대</button><br/>
+      <button @click="zoom">확대</button>
+      <br/>
       <button @click="changeSample">다음 경로</button>
       <div>
         <table>
-          <tr v-for="(pt, idx) in sample1" :key="pt.time" @click="highlightPoint(pt.time)" @mouseenter="enterPoint(pt.time)">
-            <td>{{idx}} {{ pt.time}}</td>
+          <tr v-for="(pt, idx) in sample1" :key="pt.time" @click="highlightPoint(pt.time)"
+              @mouseenter="enterPoint(pt.time)">
+            <td>{{ idx }} {{ pt.time }}</td>
           </tr>
         </table>
       </div>
     </div>
+
     <div class="map">
       <ol-map :center="center" :level="level">
         <!--
@@ -112,35 +126,43 @@ function enterPoint(time: number){
     </div>
 
     <div class="chart">
-      <div style="height:600px; width: 600px;">
       <vue3-chart-js
-        :id="lineChart.id"
-        :type="lineChart.type"
-        :data="lineChart.data">
+          :id="lineChart.id"
+          :type="lineChart.type"
+          :data="lineChart.data"
+          :options="lineChart.options"
+      >
       </vue3-chart-js>
-      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .left {
-    position: absolute;
-    width: 20%;
-    height: 100%;
-  }
-  .map {
-    position: absolute;
-    width: 80%;
-    height: 50%;
-    left: 20%;
-    background-color: #eee;
-  }
-  .chart {
-    position: absolute;
-    width: 80%;
-    left: 20%;
-    top: 50%;
-    height: 50%;
-  }
+#container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: 80px minmax(0, 3fr) minmax(0, 1fr);
+  grid-template-areas:
+          "header header"
+          "detail map"
+          "detail chart";
+}
+
+.header {
+  grid-area: header;
+}
+
+.left {
+  grid-area: detail;
+  overflow-y: scroll;
+}
+
+.map {
+  grid-area: map;
+}
+
+.chart {
+  grid-area: chart;
+}
 </style>

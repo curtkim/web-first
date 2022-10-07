@@ -21,6 +21,7 @@ const mapRef = ref(null)
 let map = new Map({
   layers: [
     new TileLayer({
+      className: 'baseMap',
       source: DAUM_ROAD_MAP,
     }),
   ],

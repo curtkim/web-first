@@ -152,16 +152,13 @@ function enterPoint(time: number) {
 .header {
   grid-area: header;
 }
-
 .left {
   grid-area: detail;
   overflow-y: scroll;
 }
-
 .map {
   grid-area: map;
 }
-
 .chart {
   grid-area: chart;
 }

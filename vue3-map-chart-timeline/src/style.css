@@ -73,3 +73,10 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/*
+.baseMap {
+  filter: grayscale(60%);
+}
+*/
+

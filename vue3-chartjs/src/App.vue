@@ -1,0 +1,88 @@
+<script setup lang="ts">
+import BarChart from './components/BarChart.vue'
+import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
+import 'chartjs-adapter-luxon';
+import {DateTime} from 'luxon'
+
+const data = [
+  { x: DateTime.local(2000, 1, 1, 0, 5).toMillis(), y: 0 },
+  { x: DateTime.local(2000, 1, 1, 4, 11).toMillis(), y: 10 },
+  { x: DateTime.local(2000, 1, 1, 12, 38).toMillis(), y: 20 },
+  { x: DateTime.local(2000, 1, 1, 15, 18).toMillis(), y: 30 },
+  { x: DateTime.local(2000, 1, 1, 18, 48).toMillis(), y: 40 },
+  { x: DateTime.local(2000, 1, 1, 22, 8).toMillis(), y: 50 },
+];
+
+const lineChart = {
+  type: "line",
+  data: {
+    datasets: [
+      {
+        data:data
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'time',
+        ticks: {
+          source: 'data'
+        },
+        time: {
+          unit: "minute",
+          tooltipFormat: "mm:ss:SSS",
+          displayFormats: {
+            minute: 'mm:ss',
+          }
+        },
+      }
+    },
+  },
+};
+</script>
+
+<template>
+  <div class="container">
+    <div class="header">
+    </div>
+    <div class="left">
+    </div>
+    <div class="main">
+      <vue3-chart-js v-bind="{...lineChart}"/>
+    </div>
+    <div class="chart">
+      <BarChart/>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+div.container {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: 50px 5fr minmax(0, 3fr);
+  grid-template-areas:
+    "header header"
+    "left main"
+    "left chart";
+  height: 100vh;
+}
+div.header{
+  grid-area: header;
+  background-color: #747bff;
+}
+div.left{
+  grid-area: left;
+  background-color: cadetblue;
+}
+div.main {
+  grid-area: main;
+}
+div.chart{
+  grid-area: chart;
+  padding: 50px;
+}
+</style>

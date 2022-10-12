@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import {ref} from 'vue'
 import BarChart from './components/BarChart.vue'
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import 'chartjs-adapter-luxon';
 import {DateTime} from 'luxon'
 
-const data = [
+let data = [
   { x: DateTime.local(2000, 1, 1, 0, 5).toMillis(), y: 0 },
   { x: DateTime.local(2000, 1, 1, 4, 11).toMillis(), y: 10 },
   { x: DateTime.local(2000, 1, 1, 12, 38).toMillis(), y: 20 },
@@ -42,6 +43,15 @@ const lineChart = {
     },
   },
 };
+ 
+const chartRef = ref(null)
+
+function addData(){
+  data.push(
+    { x: DateTime.local(2000, 1, 1, 23, 9).toMillis(), y: 60 },
+  )
+  chartRef.value.update()
+}
 </script>
 
 <template>
@@ -49,12 +59,12 @@ const lineChart = {
     <div class="header">
     </div>
     <div class="left">
+      <button @click="addData">add data</button>
     </div>
     <div class="main">
-      <vue3-chart-js v-bind="{...lineChart}"/>
+      <vue3-chart-js ref="chartRef" v-bind="{...lineChart}"/>
     </div>
     <div class="chart">
-      <BarChart/>
     </div>
   </div>
 </template>

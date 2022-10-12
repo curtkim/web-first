@@ -33,6 +33,10 @@ describe('luxon', () => {
   it('from unix timestamp', ()=>{
 		const dt = DateTime.fromMillis(1542674993410);
     expect(dt).toStrictEqual(DateTime.local(2018, 11, 20, 9, 49, 53, 410))
+		
+		expect(DateTime.fromMillis(1662423449679).toMillis()).toBe(1662423449679)
+		expect(DateTime.fromMillis(946652700000).toMillis()).toBe(946652700000)
   })
+
 
 })

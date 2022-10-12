@@ -33,3 +33,11 @@ const chart = new Chart(ctx, {
 			},
 		}
 });
+
+
+function addData(){
+	chart.data.labels?.push('test')
+	chart.data.datasets[0].data.push(20)
+	chart.update() // 'none'
+}
+setTimeout(addData, 2000)

@@ -4,6 +4,10 @@ import BarChart from './components/BarChart.vue'
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import 'chartjs-adapter-luxon';
 import {DateTime} from 'luxon'
+import {Chart, ChartEvent} from 'chart.js'
+import {getRelativePosition} from 'chart.js/helpers'
+
+const chartRef = ref(null)
 
 let data = [
   { x: DateTime.local(2000, 1, 1, 0, 5).toMillis(), y: 0 },
@@ -41,10 +45,30 @@ const lineChart = {
         },
       }
     },
+    interaction: {
+      intersect: true,
+      mode: 'x',
+    },
+    onClick: (e: ChartEvent) => {
+      const points = chartRef.value.chartJSState.chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+
+      if (points.length) {
+        const firstPoint = points[0];
+        console.log(firstPoint)
+        //{element: PointElement, datasetIndex: 0, index: 1}
+      }
+
+      const canvasPosition = getRelativePosition(e, chartRef.value.chartRef);
+      console.log(canvasPosition)
+      //{type: 'click', chart: Chart, native: PointerEvent, x: 330, y: 244, …}
+
+      const dataX = chartRef.value.chartJSState.chart.scales.x.getValueForPixel(canvasPosition.x);
+      const dataY = chartRef.value.chartJSState.chart.scales.y.getValueForPixel(canvasPosition.y);
+      console.log(dataX, dataY) // floating value로 출력된다.
+    }
   },
 };
  
-const chartRef = ref(null)
 
 function addData(){
   data.push(

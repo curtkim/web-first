@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref} from 'vue'
-import BarChart from './components/BarChart.vue'
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import 'chartjs-adapter-luxon';
 import {DateTime} from 'luxon'
@@ -18,13 +17,27 @@ let data = [
   { x: DateTime.local(2000, 1, 1, 22, 8).toMillis(), y: 50 },
 ];
 
+let data2 = [
+  { x: DateTime.local(2000, 1, 1, 0, 5).toMillis(), y: 10 },
+  { x: DateTime.local(2000, 1, 1, 5, 11).toMillis(), y: 50 },
+  { x: DateTime.local(2000, 1, 1, 11, 38).toMillis(), y: 40 },
+  { x: DateTime.local(2000, 1, 1, 16, 18).toMillis(), y: 30 },
+  { x: DateTime.local(2000, 1, 1, 19, 48).toMillis(), y: 20 },
+  { x: DateTime.local(2000, 1, 1, 21, 8).toMillis(), y: 10 },
+];
+
 const lineChart = {
   type: "line",
   data: {
     datasets: [
       {
+        label:'dataset1',
         data:data
       },
+      {
+        label: 'dataset2',
+        data: data2
+      }
     ],
   },
   options: {

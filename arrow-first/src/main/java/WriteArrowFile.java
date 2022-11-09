@@ -30,6 +30,7 @@ public class WriteArrowFile {
         FieldType.nullable(new ArrowType.Utf8()),
         /*children*/ null);
     Schema schema = new Schema(asList(age, name));
+
     try (
         BufferAllocator allocator = new RootAllocator();
         VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
@@ -37,14 +38,18 @@ public class WriteArrowFile {
         VarCharVector nameVector = (VarCharVector) root.getVector("name");
     ) {
       ageVector.allocateNew(3);
+
       ageVector.set(0, 10);
       ageVector.set(1, 20);
       ageVector.set(2, 30);
+
       nameVector.allocateNew(3);
       nameVector.set(0, "Dave".getBytes(StandardCharsets.UTF_8));
       nameVector.set(1, "Peter".getBytes(StandardCharsets.UTF_8));
       nameVector.set(2, "Mary".getBytes(StandardCharsets.UTF_8));
+
       root.setRowCount(3);
+
       File file = new File("random_access_file.arrow");
       try (
           FileOutputStream fileOutputStream = new FileOutputStream(file);

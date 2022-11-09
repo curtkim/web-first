@@ -1,0 +1,21 @@
+{
+  "name": "front",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "temp": "ts-node create_table_from_file.ts"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3",
+    "vitest": "^0.25.1"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.7",
+    "ts-node": "^10.9.1",
+    "apache-arrow": "^10.0.0"
+  }
+}

@@ -1,27 +1,23 @@
+package doc;
+
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
-import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.dictionary.Dictionary;
 import org.apache.arrow.vector.dictionary.DictionaryEncoder;
 import org.apache.arrow.vector.dictionary.DictionaryProvider;
-import org.apache.arrow.vector.ipc.ArrowFileWriter;
 import org.apache.arrow.vector.ipc.ArrowStreamReader;
 import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import org.apache.arrow.vector.types.pojo.*;
 
 import java.io.*;
 import java.nio.channels.Channels;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
-
-public class WriteStreamArrowFile {
+public class WriteStreamArrowFileWithDict {
 
 
   public static void main(String[] args) throws IOException {
@@ -38,6 +34,7 @@ public class WriteStreamArrowFile {
 
     Dictionary dictionary = new Dictionary(dictVector, new DictionaryEncoding(1L, false, /*indexType=*/null));
 
+
     // create vector and encode it
     final VarCharVector vector = new VarCharVector("vector", allocator);
     vector.allocateNewSafe();
@@ -50,10 +47,12 @@ public class WriteStreamArrowFile {
     // get the encoded vector
     IntVector encodedVector = (IntVector) DictionaryEncoder.encode(vector, dictionary);
 
+
     // create VectorSchemaRoot
-    List<Field> fields = Arrays.asList(encodedVector.getField());
-    List<FieldVector> vectors = Arrays.asList(encodedVector);
-    VectorSchemaRoot root = new VectorSchemaRoot(fields, vectors);
+    VectorSchemaRoot root = new VectorSchemaRoot(
+        Arrays.asList(encodedVector.getField()),
+        Arrays.asList(encodedVector)
+    );
 
     DictionaryProvider.MapDictionaryProvider provider = new DictionaryProvider.MapDictionaryProvider();
     provider.put(dictionary);

@@ -1,3 +1,4 @@
+package doc;
 
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;

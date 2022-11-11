@@ -11,12 +11,12 @@ const dictionaryVector2 = makeVector({
 });
 
 //console.log(dictionaryVector1)
-//console.log(dictionaryVector2)
+console.table(dictionaryVector2)
 
-console.log(dictionaryVector2.length)
-console.log(dictionaryVector2.get(0))
-console.log(dictionaryVector2.byteLength)
-console.log(dictionaryVector2.indexOf("foo"))
+// console.log(dictionaryVector2.length)
+// console.log(dictionaryVector2.get(0))
+// console.log(dictionaryVector2.byteLength)
+// console.log(dictionaryVector2.indexOf("foo"))
 // for (let i in dictionaryVector2) {
 //   console.log(i); // "0", "1", "2",
 // }

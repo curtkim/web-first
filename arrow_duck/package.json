@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3",
+    "vitest": "^0.25.1"
+  },
+  "dependencies": {
+    "apache-arrow": "^10.0.1",
+    "duckdb": "^0.6.1",
+    "express": "^4.18.2",
+    "ts-node": "^10.9.1"
+  }
+}

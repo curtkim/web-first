@@ -1,0 +1,26 @@
+{
+  "name": "regl-first",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "angle-normals": "^1.0.0",
+    "bunny": "^1.0.1",
+    "canvas-orbit-camera": "^1.0.2",
+    "geometry-extrude": "^0.2.1",
+    "gl-mat4": "^1.2.0",
+    "regl": "^2.1.0",
+    "resl": "^1.0.3",
+    "seedrandom": "^3.0.5",
+    "vectorize-text": "^3.2.2"
+  }
+}

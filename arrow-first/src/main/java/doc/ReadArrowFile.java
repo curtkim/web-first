@@ -21,10 +21,13 @@ public class ReadArrowFile {
         ArrowFileReader reader = new ArrowFileReader(fileInputStream.getChannel(), allocator);
     ) {
       System.out.println("Record batches in file: " + reader.getRecordBlocks().size());
+      VectorSchemaRoot root = reader.getVectorSchemaRoot();
+      System.out.println(root.contentToTSVString());
+      // 이미 이 시점에 schema는 존재한다.
+
       for (ArrowBlock arrowBlock : reader.getRecordBlocks()) {
         reader.loadRecordBatch(arrowBlock);
-        VectorSchemaRoot root = reader.getVectorSchemaRoot();
-        System.out.println("VectorSchemaRoot read: \n" + root.contentToTSVString());
+        System.out.println(root.contentToTSVString());
       }
     } catch (IOException e) {
       e.printStackTrace();

@@ -17,11 +17,11 @@ public class StreamFormatRead {
         FileInputStream fileInputStreamForStream = new FileInputStream(file);
         ArrowStreamReader reader = new ArrowStreamReader(fileInputStreamForStream, rootAllocator)
     ) {
-      while (reader.loadNextBatch()) {
-        VectorSchemaRoot vectorSchemaRootRecover = reader.getVectorSchemaRoot();
-        System.out.println(vectorSchemaRootRecover.getSchema().getFields());
+      VectorSchemaRoot vectorSchemaRootRecover = reader.getVectorSchemaRoot();
+      System.out.println(vectorSchemaRootRecover.getSchema().getFields());
+
+      while (reader.loadNextBatch())
         System.out.print(vectorSchemaRootRecover.contentToTSVString());
-      }
     } catch (IOException e) {
       e.printStackTrace();
     }

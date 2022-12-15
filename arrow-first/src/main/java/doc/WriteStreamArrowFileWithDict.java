@@ -79,6 +79,9 @@ public class WriteStreamArrowFileWithDict {
       Map<Long, Dictionary> dictionaryMap = reader.getDictionaryVectors();
       long dictionaryId = intVector.getField().getDictionary().getId();
       VarCharVector varCharVector =(VarCharVector) DictionaryEncoder.decode(intVector, dictionaryMap.get(dictionaryId));
+
+      System.out.println(readRoot.contentToTSVString());
+      System.out.println(varCharVector);
     }
   }
 }

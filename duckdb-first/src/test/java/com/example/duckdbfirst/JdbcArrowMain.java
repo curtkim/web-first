@@ -22,7 +22,7 @@ public class JdbcArrowMain {
 		Class.forName("org.duckdb.DuckDBDriver");
 		Connection conn = DriverManager.getConnection("jdbc:duckdb:");
 		Statement stmt = conn.createStatement();
-		DuckDBResultSet rs = (DuckDBResultSet) stmt.executeQuery("SELECT * from generate_series(2000)");
+		DuckDBResultSet rs = (DuckDBResultSet) stmt.executeQuery("SELECT * from generate_series(20)");
 
 		/* by resultset
 		while(rs.next()){
@@ -33,6 +33,8 @@ public class JdbcArrowMain {
 
 		BufferAllocator allocator = new RootAllocator();
 		ArrowReader reader = (ArrowReader) rs.arrowExportStream(allocator, 1024);
+    System.out.println(reader.getClass().getName());  // org.apache.arrow.c.ArrowArrayStreamReader
+
 		while (reader.loadNextBatch()) {
 			System.out.println(reader.getVectorSchemaRoot().contentToTSVString());
 		}

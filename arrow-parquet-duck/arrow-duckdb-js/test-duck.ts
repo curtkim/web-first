@@ -6,7 +6,7 @@ import duckdb from 'duckdb'
 const db = new duckdb.Database(':memory:');
 const conn = db.connect();
 
-const query = "SELECT traffic_id, count(*) as cnt from read_parquet('*.parquet') group by traffic_id";
+const query = "SELECT traffic_id, count(*) as cnt from read_parquet('navi-*.parquet') group by traffic_id";
 
 conn.all(query, function (err, res){
   if(err)

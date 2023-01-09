@@ -23,12 +23,12 @@ conn.arrowIPCAll(query, function(err, res) {
   }
 
   console.table([res]);
-  writeFileSync("temp.arrow", res)
 
   const table = tableFromIPC(res);
   console.log(table.schema)
-  console.table(table.toArray())
+  //console.table(table.toArray())
 
+  writeFileSync("temp.arrow", res[0])
   //console.log(typeof res) // object
   //console.log(res.toString())
   //console.log(res[0])

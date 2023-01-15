@@ -20,21 +20,23 @@ public class ReadParquetFile {
 
   //private static Path path = new Path("userdata1.parquet");
 
-  private static void printGroup(Group g) {
-    int fieldCount = g.getType().getFieldCount();
-    for (int field = 0; field < fieldCount; field++) {
-      int valueCount = g.getFieldRepetitionCount(field);
+  private static void printGroup(Group group) {
+    int fieldCount = group.getType().getFieldCount();
+    int valueCount = group.getFieldRepetitionCount(0);
 
-      Type fieldType = g.getType().getType(field);
-      String fieldName = fieldType.getName();
-
-      for (int index = 0; index < valueCount; index++) {
-        if (fieldType.isPrimitive()) {
-          //System.out.println(fieldName + " " + g.getValueToString(field, index));
-        }
+    for(int value=0; value < valueCount; value++){
+      for(int field=0; field < 3; field++){
+        System.out.print(group.getValueToString(field, value) + ", ");
       }
+      System.out.println("--");
     }
-    //System.out.println("");
+    /*
+    for( int i = 0; i< valueCount; i++){
+      for(int j = 0; j < fieldCount; j++)
+        System.out.print(group.getValueToString(j, i)+ ", ");
+      System.out.println();
+    }
+    */
   }
 
   public static void main(String[] args) throws IllegalArgumentException {
@@ -64,10 +66,8 @@ public class ReadParquetFile {
           final RecordReader recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema));
           for (int i = 0; i < rows; i++) {
             final Group g = (Group)recordReader.read();
-            System.out.println(i);
+            System.out.println("group : " + i);
             printGroup(g);
-
-            // TODO Compare to System.out.println(g);
           }
         }
       } finally {

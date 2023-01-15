@@ -32,8 +32,10 @@ public class ReadGeoParquetFile {
     WKBReader wkbReader = new WKBReader();
 
     int fieldCount = g.getType().getFieldCount();
+    int valueCount = g.getFieldRepetitionCount(0);
+    System.out.println("valueCount:" + valueCount);
+
     for (int field = 0; field < fieldCount; field++) {
-      int valueCount = g.getFieldRepetitionCount(field);
 
       Type fieldType = g.getType().getType(field);
       String fieldName = fieldType.getName();
@@ -93,6 +95,7 @@ public class ReadGeoParquetFile {
           final RecordReader recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema));
           for (int i = 0; i < rows; i++) {
             final Group g = (Group)recordReader.read();
+            System.out.println("row : " + i);
             printGroup(g);
           }
         }

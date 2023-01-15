@@ -11,7 +11,9 @@ repositories {
 
 dependencies {
     implementation "org.apache.arrow:arrow-vector:10.0.0"
+    implementation "org.apache.arrow:arrow-dataset:10.0.0"
     implementation "org.apache.arrow:arrow-memory-netty:10.0.0"
+
     implementation 'io.projectreactor:reactor-core:3.5.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

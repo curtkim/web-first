@@ -11,8 +11,6 @@ repositories {
 
 dependencies {
 
-    implementation('org.duckdb:duckdb_jdbc:0.6.1')
-
     implementation('org.apache.hadoop:hadoop-common:3.3.4'){
         exclude group: 'org.eclipse.jetty'
         exclude group: 'com.sun.jersey'

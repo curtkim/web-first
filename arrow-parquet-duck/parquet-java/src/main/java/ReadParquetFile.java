@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.nio.file.Paths;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
+//import org.apache.hadoop.conf.Configuration;
+//import org.apache.hadoop.fs.Path;
+import org.apache.parquet.ParquetReadOptions;
 import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
@@ -16,7 +18,7 @@ import org.apache.parquet.schema.Type;
 
 public class ReadParquetFile {
 
-  private static Path path = new Path("userdata1.parquet");
+  //private static Path path = new Path("userdata1.parquet");
 
   private static void printGroup(Group g) {
     int fieldCount = g.getType().getFieldCount();
@@ -37,10 +39,11 @@ public class ReadParquetFile {
 
   public static void main(String[] args) throws IllegalArgumentException {
 
-    Configuration conf = new Configuration();
+    //Configuration conf = new Configuration();
 
     try {
-      ParquetMetadata readFooter = ParquetFileReader.readFooter(conf, path, ParquetMetadataConverter.NO_FILTER);
+      ParquetFileReader r = new ParquetFileReader(new LocalInputFile(Paths.get("userdata1.parquet")), ParquetReadOptions.builder().build());
+      ParquetMetadata readFooter = r.getFooter();
       System.out.println("meta key/value");
       for(String key : readFooter.getFileMetaData().getKeyValueMetaData().keySet()) {
         System.out.println(key +" : " + readFooter.getFileMetaData().getKeyValueMetaData().get(key));
@@ -50,7 +53,6 @@ public class ReadParquetFile {
 
       System.out.println("schema");
       System.out.println(schema);
-      ParquetFileReader r = new ParquetFileReader(conf, path, readFooter);
 
       PageReadStore pages = null;
       try {

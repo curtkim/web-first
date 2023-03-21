@@ -14,7 +14,8 @@ repositories {
 
 dependencies {
 
-    implementation('org.duckdb:duckdb_jdbc:0.6.1')
+    //implementation files('libs/duckdb_jdbc_0.7.1.jar')
+    implementation('org.duckdb:duckdb_jdbc:0.7.1')
     implementation "org.apache.arrow:arrow-vector:10.0.1"
     implementation "org.apache.arrow:arrow-memory-netty:10.0.1"
     implementation("org.apache.arrow:arrow-c-data:10.0.1")

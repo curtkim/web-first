@@ -13,7 +13,7 @@ import org.duckdb.DuckDBResultSet;
 
 
 /**
- * jni 에러가 발생한다.
+ * jni 에러가 발생한다. arrow 10.0.1에서 발생했고, 11에서는 발생하지 않는다.
  * https://issues.apache.org/jira/browse/ARROW-16608
  * https://github.com/apache/arrow/pull/14472
  */

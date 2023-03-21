@@ -16,9 +16,9 @@ dependencies {
 
     //implementation files('libs/duckdb_jdbc_0.7.1.jar')
     implementation('org.duckdb:duckdb_jdbc:0.7.1')
-    implementation "org.apache.arrow:arrow-vector:10.0.1"
-    implementation "org.apache.arrow:arrow-memory-netty:10.0.1"
-    implementation("org.apache.arrow:arrow-c-data:10.0.1")
+    implementation "org.apache.arrow:arrow-vector:11.0.0"
+    implementation "org.apache.arrow:arrow-memory-netty:11.0.0"
+    implementation("org.apache.arrow:arrow-c-data:11.0.0")
 
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'

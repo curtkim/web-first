@@ -2,7 +2,7 @@ package com.example.duckdbfirst;
 
 import java.sql.*;
 
-public class JdbcArrowMain2 {
+public class DuckdbJdbcMain {
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     Class.forName("org.duckdb.DuckDBDriver");
     Connection conn = DriverManager.getConnection("jdbc:duckdb:");

@@ -36,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 data
+src/test/java/com/example/duckdbfirst/DuckdbJdbcFromS3Main.java

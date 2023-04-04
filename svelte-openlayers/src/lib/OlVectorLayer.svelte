@@ -1,0 +1,35 @@
+<script lang="ts">
+
+
+  import {getContext, onMount, onDestroy} from 'svelte';
+  import {Map } from 'ol';
+  import VectorLayer from 'ol/layer/Vector';
+  import VectorSource from 'ol/source/Vector';
+  import {key} from './ol-common.ts'
+  import type {StyleLike} from "ol/style/Style";
+
+  export let style : StyleLike;
+  export let features: Array<any>;
+
+	const { getMap } = getContext(key);
+	const map:Map = getMap();
+
+  const vectorLayer = new VectorLayer({
+    source: new VectorSource({
+      features: features
+    }),
+    style: style,
+  });
+
+  onMount(() => {
+    map.addLayer(vectorLayer);
+  });
+  onDestroy(() => {
+    map.removeLayer(vectorLayer);
+  });
+</script>
+
+<div></div>
+
+<style>
+</style>

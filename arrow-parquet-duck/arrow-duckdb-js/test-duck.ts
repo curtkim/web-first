@@ -1,5 +1,5 @@
 //import { tableFromArrays } from 'apache-arrow';
-import { writeFileSync} from 'fs'
+import {writeFileSync} from 'fs'
 
 import { tableFromIPC } from 'apache-arrow';
 import duckdb from 'duckdb'

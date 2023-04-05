@@ -4,7 +4,7 @@ import {
 } from "parquet-wasm/node/arrow2";
 import {readFile} from 'fs/promises'
 
-const format = new WKB();
+//const format = new WKB();
 
 async function mytest() {
   const response = await readFile('example.parquet');

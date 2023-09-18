@@ -9,7 +9,7 @@
   import Feature from "ol/Feature";
 
   export let style : StyleLike;
-  export let features: Array<Feature>;
+  export let features: Array<Feature> = [];
 
 	const { getMap } = getContext(key);
 	const map:Map = getMap();
@@ -25,6 +25,14 @@
   onDestroy(() => {
     map.removeLayer(vectorLayer);
   });
+
+  let prevFeatures = [];
+  $: {
+    console.log(features.length, prevFeatures.length)
+    prevFeatures = features;
+    vectorLayer.getSource().clear();
+    vectorLayer.getSource().addFeatures(features);
+  }
 </script>
 
 <div></div>

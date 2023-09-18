@@ -18,7 +18,7 @@
     }),
   })
 
-  const features = [
+  let features = [
     new Feature({
       geometry: new Point([204312, 421282]),
     }),
@@ -27,8 +27,15 @@
     }),
   ];
 
+  function addFeature(){
+    features = [...features, new Feature({
+      geometry: new Point([195063,442898]),
+    })];
+  }
+
 </script>
 
+<button on:click={addFeature}>add feature</button>
 <div class="mapContainer">
   <OlMap center={[195063,442898]} level={10}>
     <OlVectorLayer features={features} style={triangle}/>

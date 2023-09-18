@@ -13,12 +13,14 @@ const maxExtent = [
 
 var tilePixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
 
+export const TILE_GRID = new TileGrid({
+  extent: maxExtent,
+  origin: [-30000, -60000],
+  resolutions: resolutions
+})
+
 export const DAUM_ROAD_MAP = new TileImage({
-  tileGrid: new TileGrid({
-    extent: maxExtent,
-    origin: [-30000, -60000],
-    resolutions: resolutions
-  }),
+  tileGrid: TILE_GRID,
   tilePixelRatio: tilePixelRatio,
   tileUrlFunction: function (coordinate) {
     if (coordinate === null) return undefined;
@@ -26,13 +28,8 @@ export const DAUM_ROAD_MAP = new TileImage({
     var x = coordinate[1];
     var y = -coordinate[2] - 1;
 
-    //console.log(coordinate, z, y, x);
-    var idx = x % 4;
-    if (idx < 0) idx = idx + 4;
-    var map_type = tilePixelRatio >= 2 ? 'map_2d_hd' : 'map_2d';
     // @ts-ignore
-    var tileVersion = kakao.maps.VERSION.ROADMAP;//'2205pfk'
-    var url = 'http://map' + idx + '.daumcdn.net/' + map_type + '/' + tileVersion + '/L' + z + '/' + y + '/' + x + '.png';
-    return url;
+    var uriFunc = kakao.maps.URI_FUNC[tilePixelRatio >= 2 ? 'ROADMAP_HD' : 'ROADMAP'];
+    return 'https://' + uriFunc(x, y, z);
   }
 });

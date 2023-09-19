@@ -14,22 +14,23 @@
   let years = []
   let year = 1936;
 
+  console.log("init")
   onMount(async () => {
+    console.log("onMount")
     years = await get_year_list();
   })
 
   async function get_year_list(): Promise<Array<number>> {
     const conn = await conn_prom;
-    const t = await conn.query(`SELECT distinct year
-                                FROM 'SOTU.parquet'`)
+    const t = await conn.query(`SELECT distinct year FROM 'SOTU.parquet'`)
     return t.toArray().map(row => row.year)
   }
 
-  async function get_year(y) {
+  async function get_year(y) : Promise<Table<any>> {
     const conn = await conn_prom;
-    return await conn.query(`SELECT *
+    return conn.query(`SELECT *
                              FROM 'SOTU.parquet'
-                             WHERE year == ${y} limit 5`)
+                             WHERE year == ${y} limit 5`);
   }
 
   $: table = get_year(year)

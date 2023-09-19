@@ -17,6 +17,7 @@
       angle: 0,
     }),
   })
+  let mapComponent : OlMap;
 
   let features = [
     new Feature({
@@ -33,11 +34,18 @@
     })];
   }
 
+  function moveMap(){
+    mapComponent.setCenterAndLevel([195063,442898], 9);
+  }
+
 </script>
 
-<button on:click={addFeature}>add feature</button>
+<div>
+  <button on:click={addFeature}>add feature</button>
+  <button on:click={moveMap}>move map</button>
+</div>
 <div class="mapContainer">
-  <OlMap center={[195063,442898]} level={10}>
+  <OlMap center={[195063,442898]} level={10} bind:this={mapComponent}>
     <OlVectorLayer features={features} style={triangle}/>
   </OlMap>
 </div>

@@ -30,8 +30,9 @@
   $: {
     console.log(features.length, prevFeatures.length)
     prevFeatures = features;
-    vectorLayer.getSource().clear();
-    vectorLayer.getSource().addFeatures(features);
+    const source : VectorSource = vectorLayer.getSource();
+    source.clear();
+    source.addFeatures(features);
   }
 </script>
 

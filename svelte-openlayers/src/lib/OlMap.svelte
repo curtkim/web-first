@@ -37,6 +37,13 @@
     getMap : ()=> map
   })
 
+  export function setCenterAndLevel(center : [number, number], level: number){
+    map.setView(new View({
+      center: center,
+      zoom: level2zoom(level)
+    }))
+  }
+
 </script>
 
 <div bind:this={container} style="width: 100%; height: 100%">

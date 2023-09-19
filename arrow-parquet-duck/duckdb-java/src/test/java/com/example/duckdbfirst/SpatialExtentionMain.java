@@ -44,7 +44,7 @@ public class SpatialExtentionMain {
     {
       WKBReader reader = new WKBReader();
       Statement stmt = conn.createStatement();
-      String sql = "select linkid, rdcate, oneway, ST_AsWKB(ST_GeomFromWKB(wkb_geometry)) geom " +
+      String sql = "select linkid, rdcate, oneway, wkb_geometry geom " +
           "FROM st_read('/Users/curt/Documents/rn_link_l.fgb') " +
           "limit 10";
       ResultSet rs = stmt.executeQuery(sql);
@@ -57,6 +57,8 @@ public class SpatialExtentionMain {
         //ByteBuffer byteBuffer = (ByteBuffer)rs.getObject(4);
         //System.out.println(String.format("%s %s %s", rs.getString(1), rs.getString(2), rs.getString(3)));
         String a = rs.getString(1);
+        //rs.getBinaryStream(4);
+        //Object obj = rs.getObject(4);
         Blob blob = rs.getBlob(4);
         /*
         Blob blob = rs.getBlob(4);

@@ -11,6 +11,9 @@ dependencies:
   apache-arrow:
     specifier: ^13.0.0
     version: 13.0.0
+  svelte-table:
+    specifier: ^0.6.1
+    version: 0.6.1
 
 devDependencies:
   '@sveltejs/vite-plugin-svelte':
@@ -1158,6 +1161,10 @@ packages:
       svelte: 4.0.5
       typescript: 5.2.2
     dev: true
+
+  /svelte-table@0.6.1:
+    resolution: {integrity: sha512-DfSwLs19mtp9V4rFo4oYv8T0YWFOR0Yy+43qtj3fPbZhd1h3vyycJ5c6mFlxICnsNYOD7WOjmQ/EpXY85mmJMQ==}
+    dev: false
 
   /svelte@4.0.5:
     resolution: {integrity: sha512-PHKPWP1wiWHBtsE57nCb8xiWB3Ht7/3Kvi3jac0XIxUM2rep8alO7YoAtgWeGD7++tFy46krilOrPW0mG3Dx+A==}
